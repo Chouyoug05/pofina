@@ -213,8 +213,7 @@ button.user{cursor:pointer;font:inherit;color:inherit;text-align:left}button.use
     <nav class="nav" id="nav"></nav>
     <div class="apk-side">
       <div><b>Application mobile</b><small>À installer sur les téléphones des éleveurs et des agents terrain.</small></div>
-      <div class="apk-code"><em>Code</em>1234</div>
-      <a class="btn" href="https://file.pizza/download/wnkig5o5" target="_blank" rel="noopener" onclick="event.stopPropagation()"><i data-lucide="download" class="i"></i>Télécharger l’APK</a>
+      <a class="btn" href="https://drive.google.com/file/d/1vJldS9DltpeKdZ3K18LfIJgY9ZhVMYEf/view?usp=sharing" target="_blank" rel="noopener" onclick="event.stopPropagation()"><i data-lucide="download" class="i"></i>Télécharger l’APK</a>
       <button type="button" class="btn sec sm" onclick="openPhone(0)">Voir l’aperçu</button>
     </div>
     <div class="side-foot"><a onclick="openHelp()"><i data-lucide="circle-help" class="i"></i>Aide et support</a><a onclick="logout()"><i data-lucide="log-out" class="i"></i>Se déconnecter</a></div>
@@ -238,21 +237,19 @@ button.user{cursor:pointer;font:inherit;color:inherit;text-align:left}button.use
 <div class="toast" id="ts"></div>
 <script>
 const IMG="assets/illustrations/",SHOT="assets/screenshots/";
-const APK={url:"https://file.pizza/download/wnkig5o5",code:"1234"};
+const APK={url:"https://drive.google.com/file/d/1vJldS9DltpeKdZ3K18LfIJgY9ZhVMYEf/view?usp=sharing"};
 const apkBanner=()=>`<aside class="apk-banner" aria-label="Télécharger l’application mobile">
 <span class="badge">${ic("smartphone")}</span>
-<div class="grow"><b>Installer l’application mobile</b><small>Téléchargez l’APK, puis installez-la sur les téléphones des éleveurs et des agents terrain. Code d’accès au fichier : <b>${APK.code}</b>.</small></div>
-<div class="code-box"><span>Code</span><strong>${APK.code}</strong></div>
+<div class="grow"><b>Installer l’application mobile</b><small>Téléchargez l’APK, puis installez-la sur les téléphones des éleveurs et des agents terrain.</small></div>
 <a class="btn" href="${APK.url}" target="_blank" rel="noopener">${ic("download")}Télécharger l’APK</a>
 </aside>`;
 const apkPanel=()=>card(cardTitle("smartphone","Application mobile (APK)","","Pour les éleveurs et les agents terrain")+`
-<p class="sub" style="margin-bottom:14px">L’administration pilote le programme ; les saisies se font sur le téléphone. Téléchargez l’APK ici, ouvrez le lien, saisissez le code, puis installez le fichier sur chaque appareil.</p>
+<p class="sub" style="margin-bottom:14px">L’administration pilote le programme ; les saisies se font sur le téléphone. Téléchargez l’APK ici, puis installez le fichier sur chaque appareil.</p>
 <div class="apk-banner" style="margin:0">
-<div class="code-box"><span>Code fichier</span><strong>${APK.code}</strong></div>
-<div class="grow"><b>Lien de téléchargement</b><small>${APK.url}</small></div>
+<div class="grow"><b>Lien de téléchargement</b><small>Google Drive · fichier APK</small></div>
 <a class="btn" href="${APK.url}" target="_blank" rel="noopener">${ic("download")}Télécharger</a>
 </div>
-<div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">${btn("Copier le code",{sec:true,sm:true,icon:"copy",on:`navigator.clipboard.writeText('${APK.code}');toast('Code ${APK.code} copié')`})}${btn("Copier le lien",{sec:true,sm:true,icon:"link",on:`navigator.clipboard.writeText('${APK.url}');toast('Lien copié')`})}${btn("Voir l’aperçu",{sec:true,sm:true,icon:"smartphone",on:"openPhone(0)"})}</div>`);
+<div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">${btn("Copier le lien",{sec:true,sm:true,icon:"link",on:`navigator.clipboard.writeText('${APK.url}');toast('Lien copié')`})}${btn("Voir l’aperçu",{sec:true,sm:true,icon:"smartphone",on:"openPhone(0)"})}</div>`);
 const $=s=>document.querySelector(s);
 const sum=(a,k)=>a.reduce((s,x)=>s+x[k],0),avg=(a,k)=>a.length?sum(a,k)/a.length:0;
 const nf=n=>Math.round(n).toLocaleString("fr-FR").replace(/\u202f/g,"\u00a0");
@@ -415,7 +412,7 @@ ${card(cardTitle("history","Journal des opérations","","Non modifiable")+(LOG.l
 
 application:()=>`${apkPanel()}
 <div class="grid g-2" style="margin-top:16px">${card(cardTitle("smartphone","Aperçu de l’application")+`<div class="phone" style="margin:8px auto 0"><img src="${SHOT}10_accueil.png" alt="Accueil"></div><div style="text-align:center;margin-top:12px">${btn("Parcourir les écrans",{sec:true,sm:true,on:"openPhone(0)"})}</div>`)}
-${card(cardTitle("list-checks","Installation sur le terrain")+`<ol class="num">${["Téléchargez l’APK avec le bouton vert (code <b>"+APK.code+"</b>).","Transférez le fichier sur le téléphone de l’éleveur ou de l’agent.","Autorisez l’installation depuis des sources inconnues si Android le demande.","Ouvrez Poufa et créez le compte avec le numéro reçu par SMS."].map(s=>`<li>${s}</li>`).join("")}</ol>`)}</div>`,
+${card(cardTitle("list-checks","Installation sur le terrain")+`<ol class="num">${["Téléchargez l’APK avec le bouton vert.","Transférez le fichier sur le téléphone de l’éleveur ou de l’agent.","Autorisez l’installation depuis des sources inconnues si Android le demande.","Ouvrez Poufa et créez le compte avec le numéro reçu par SMS."].map(s=>`<li>${s}</li>`).join("")}</ol>`)}</div>`,
 
 guide:()=>`<div class="guide"><nav class="toc card"><b>Sommaire</b>${GUIDE.map((g,i)=>`<a onclick="toChap('${g.id}')">${ic(g.icon)}<span>${i+1}. ${g.title}</span></a>`).join("")}<div class="toc-act">${btn("Imprimer le guide",{icon:"printer",sec:true,on:"print()"})}</div></nav>
 <div class="chaps">${card(`<div class="ct">${badge("compass")}<div class="grow"><h3>Par où commencer ?</h3><small>Trois gestes suffisent pour prendre en main l’administration.</small></div></div><ol class="num">${["Connectez-vous avec votre adresse et le code reçu par SMS.","Lisez le tableau de bord : le bandeau rouge et les pastilles vous disent ce qui demande une action.","Cliquez sur une tuile ou une ferme : chaque écran explique quoi faire, avec un seul bouton vert principal."].map(s=>`<li>${s}</li>`).join("")}</ol>`)}
@@ -488,7 +485,7 @@ ${statBlock("Indicateurs de la bande",[[{v:x.day?nf(eff):"—",l:"Effectif prés
 ${secTitle("Journal de la ferme")}${timeline(events)}</div>
 <div class="dfoot">${btn("Programmer une visite",{icon:"calendar",on:`planVisit('${x.id}')`})}${btn("Carte",{sec:true,icon:"map",on:"closeDrawer();go('carte')"})}</div>`)}
 const SH=[["Accueil","10_accueil"],["Bande","12_detail_bande"],["Sanitaire","14_sanitaire"],["Sombre","30_accueil_sombre"]];
-function openPhone(k){drawer(`${sheetHead("Application mobile","APK pour éleveurs et agents · code ${APK.code}")}
+function openPhone(k){drawer(`${sheetHead("Application mobile","APK pour éleveurs et agents terrain")}
 <div class="dbody" style="padding-top:0">${apkBanner()}
 <div class="seg" style="margin:0 0 12px">${SH.map((s,i)=>`<button class="${i==k?"on":""}" onclick="openPhone(${i})">${s[0]}</button>`).join("")}</div>
 <div class="phone"><img src="${SHOT+SH[k][1]}.png" alt="${SH[k][0]}"></div></div>`)}
