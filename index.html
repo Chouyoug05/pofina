@@ -1,0 +1,597 @@
+﻿<!DOCTYPE html>
+<html lang="fr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>POUFA – Administration</title>
+<link rel="icon" type="image/svg+xml" href="assets/web/favicon.svg">
+<link rel="icon" type="image/png" href="assets/web/favicon.png">
+<link rel="apple-touch-icon" href="assets/web/icons/Icon-192.png">
+<meta name="theme-color" content="#1F9D40">
+<link rel="stylesheet" href="assets/web/splash.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@0.469.0/dist/umd/lucide.min.js"></script>
+<style>
+/* Jetons partagés avec l'application mobile (PoufaColors, Radii) */
+:root,.light{--g:#1F9D40;--gs:#E7F5EA;--ink:#1C2420;--mut:#7B8781;--bg:#F5F6F7;--card:#FFFFFF;--line:#EDF0EE;--a:#E8A317;--as:#FBF0D6;--at:#9A6A00;--r:#D9483B;--rs:#FBE3E0;--b:#2F7FD0;--bs:#DFECFA;--v:#6C5CE7;color-scheme:light}
+:root{--rf:8px;--rt:18px;--rc:20px;--rsh:28px}
+:root[data-theme="dark"]{--gs:#1C3326;--ink:#E8EFEA;--mut:#93A39A;--bg:#0F1512;--card:#18211C;--line:#26332B;--as:#3A2F12;--at:#F0C05A;--r:#E5675B;--rs:#3D1F1C;--b:#5B9BE0;--bs:#1A2B3D;--v:#8C7FF0;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+h1,h2,h3,p{margin:0}a{color:inherit}
+.i{width:18px;height:18px;flex:none;stroke-width:1.8}
+small,.sub{color:var(--mut);font-size:12px}.grow{flex:1;min-width:0}
+.row-b{display:flex;justify-content:space-between;align-items:center;gap:12px}
+
+/* Structure */
+.app{display:flex;min-height:100vh}
+.side{width:252px;flex:none;position:sticky;top:0;height:100vh;overflow:auto;background:var(--card);border-right:1px solid var(--line);padding:20px 14px;display:flex;flex-direction:column}
+.logo{display:flex;align-items:center;gap:8px;font-weight:700;font-size:20px;padding:0 12px 14px}.logo .i{width:24px;height:24px;color:var(--g)}
+.nav{flex:1 0 auto;min-width:0}.promo,.side-foot{flex:none}.grp{font-size:12px;color:var(--mut);padding:14px 14px 6px}
+.nav a{display:flex;align-items:center;gap:12px;height:44px;padding:0 14px;border-radius:99px;color:var(--mut);font-weight:500;text-decoration:none;margin-bottom:2px}
+.nav a:hover{color:var(--ink);background:var(--bg)}.nav a.on{background:var(--gs);color:var(--g);font-weight:600}
+.promo{display:block;margin:16px 0 8px;border-radius:var(--rt);overflow:hidden;border:1px solid var(--line);cursor:pointer;background:var(--card)}
+.promo img{display:block;width:100%;height:112px;object-fit:cover;object-position:50% 35%}.promo div{padding:10px 12px}.promo b{display:block}
+.apk-side{margin:12px 0 8px;padding:14px;border-radius:var(--rt);border:1px solid var(--gs);background:var(--gs);display:grid;gap:10px}
+.apk-side b{display:block;font-size:14px;color:var(--g)}.apk-side small{display:block;color:var(--ink);line-height:1.35}
+.apk-code{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:12px;background:var(--card);font-weight:700;font-size:20px;letter-spacing:.12em;color:var(--ink)}
+.apk-code em{font-style:normal;font-size:11px;letter-spacing:0;font-weight:600;color:var(--mut);margin-right:4px}
+.apk-banner{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding:16px 18px;border-radius:var(--rc);border:1px solid var(--g);background:linear-gradient(135deg,var(--gs),var(--card));margin-bottom:16px}
+.apk-banner .grow b{display:block;font-size:16px}.apk-banner .grow small{display:block;margin-top:4px;color:var(--mut)}
+.apk-banner .code-box{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 16px;border-radius:14px;background:var(--card);border:1px solid var(--line);min-width:110px}
+.apk-banner .code-box span{font-size:11px;font-weight:600;color:var(--mut);text-transform:uppercase;letter-spacing:.04em}
+.apk-banner .code-box strong{font-size:28px;letter-spacing:.18em;color:var(--g)}
+.side-foot a{display:flex;align-items:center;gap:12px;height:40px;padding:0 14px;color:var(--mut);text-decoration:none;cursor:pointer;border-radius:99px}.side-foot a:hover{color:var(--ink)}
+.main{flex:1;min-width:0;padding:20px 28px 48px}
+
+/* Barre du haut */
+.top{display:flex;gap:10px;align-items:center;margin-bottom:22px}
+.search{flex:1;max-width:420px;display:flex;align-items:center;gap:10px;height:44px;padding:0 16px;background:var(--card);border:1px solid var(--line);border-radius:99px;color:var(--mut)}
+.search input{border:0;background:none;outline:0;flex:1;font:inherit;color:var(--ink)}
+.ml{margin-left:auto}
+select{font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:var(--rf);height:44px;padding:0 12px}
+.ibtn{width:44px;height:44px;border-radius:50%;background:var(--card);border:1px solid var(--line);display:grid;place-items:center;color:var(--ink);cursor:pointer;position:relative;flex:none}
+.ibtn .dot{position:absolute;top:6px;right:5px;min-width:17px;height:17px;padding:0 4px;border-radius:99px;background:var(--r);color:#fff;font-size:10px;font-weight:700;display:grid;place-items:center}
+.user{display:flex;align-items:center;gap:10px;height:44px;padding:0 14px 0 4px;border-radius:99px;background:var(--card);border:1px solid var(--line)}
+.av{width:36px;height:36px;border-radius:50%;background:var(--gs);color:var(--g);font-weight:700;font-size:13px;display:grid;place-items:center;flex:none}
+.user b{display:block;font-size:13px;line-height:1.2}
+
+/* Composants */
+.btn{height:44px;padding:0 18px;border-radius:var(--rf);border:0;background:var(--g);color:#fff;font:600 14px Inter,system-ui,sans-serif;display:inline-flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;white-space:nowrap}
+.btn.sec{background:var(--card);color:var(--ink);border:1px solid var(--line)}.btn.sec:hover{background:var(--bg)}
+.btn.sm{height:36px;padding:0 12px;font-size:13px}.btn:disabled{opacity:.5;cursor:default}.btn .i{width:17px;height:17px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--rc);padding:18px;min-width:0}
+.ct{display:flex;align-items:center;gap:12px;margin-bottom:14px}.ct h3{font-size:15px;font-weight:600}
+.badge{width:40px;height:40px;border-radius:50%;background:var(--gs);color:var(--g);display:grid;place-items:center;flex:none}
+.badge.warn{background:var(--as);color:var(--at)}.badge.dan{background:var(--rs);color:var(--r)}.badge.info{background:var(--bs);color:var(--b)}
+.pill{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:99px;font-size:12px;font-weight:600;white-space:nowrap;background:var(--gs);color:var(--g)}
+.pill.warn{background:var(--as);color:var(--at)}.pill.dan{background:var(--rs);color:var(--r)}.pill.info{background:var(--bs);color:var(--b)}.pill .i{width:14px;height:14px}
+.grid{display:grid;gap:16px;margin-bottom:16px}
+.k2{grid-template-columns:repeat(2,1fr)}.k3{grid-template-columns:repeat(3,1fr)}.k4{grid-template-columns:repeat(4,1fr)}
+.g-top{grid-template-columns:1fr 1.35fr}.g-2{grid-template-columns:1.5fr 1fr}.g-h{grid-template-columns:1fr 1fr}.g-l{grid-template-columns:1fr 1.3fr}
+.kpi .kt{display:flex;align-items:center;gap:10px;color:var(--mut);font-size:13px}.kpi .val{font-size:26px;font-weight:700;margin:12px 0 2px;letter-spacing:-.01em}
+.note{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--mut)}.note.pos{color:var(--g);font-weight:600}.note.dan{color:var(--r);font-weight:600}.note.warn{color:var(--at);font-weight:600}.note .i{width:14px;height:14px}
+.head{margin-bottom:18px}.head h1,.banner h1{font-size:26px;font-weight:700;letter-spacing:-.01em}.head p{margin-top:4px;font-size:14px}
+.banner{position:relative;height:132px;border-radius:var(--rc);overflow:hidden;background:var(--card);border:1px solid var(--line);margin-bottom:16px}
+.banner img{position:absolute;right:0;top:0;width:55%;height:100%;object-fit:cover}
+.banner::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,var(--card) 45%,color-mix(in srgb,var(--card) 70%,transparent) 52%,transparent 66%)}
+.banner .txt{position:relative;z-index:1;height:100%;display:flex;flex-direction:column;justify-content:center;padding:0 26px;max-width:52%}.banner p{color:var(--mut);margin-top:4px}
+.sec-t{display:flex;justify-content:space-between;align-items:center;margin:8px 0 12px}.sec-t h2{font-size:18px;font-weight:700}
+.tile{display:flex;flex-direction:column;align-items:center;gap:10px;padding:12px 12px 16px;text-decoration:none;transition:border-color .15s}
+.tile:hover{border-color:var(--g)}.tile img{width:100%;aspect-ratio:1.6;object-fit:cover;border-radius:var(--rt)}.tile b{font-size:15px;font-weight:600}
+.prog{height:8px;border-radius:99px;background:var(--line);overflow:hidden;margin:8px 0 6px}.prog span{display:block;height:100%;border-radius:99px;background:var(--g)}
+.prog.warn span{background:var(--a)}.prog.dan span{background:var(--r)}.prog.info span{background:var(--b)}
+.sb{border:1px solid var(--line);border-radius:var(--rt);overflow:hidden;margin:14px 0}
+.sb-h{background:var(--gs);text-align:center;font-weight:600;font-size:13px;padding:9px}
+.sb-r{display:grid}.sb-r+.sb-r{border-top:1px solid var(--line)}.sb-r div{padding:12px 8px;text-align:center}.sb-r div+div{border-left:1px solid var(--line)}
+.sb-r b{display:block;font-size:19px;font-weight:700}.sb-r b.warn{color:var(--at)}.sb-r b.dan{color:var(--r)}.sb-r span{font-size:12px;color:var(--mut)}
+.item{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid var(--line)}.ct+.item,.item:first-child{border-top:0}
+.item b{display:block;font-weight:500}.item.cl{cursor:pointer}.item.cl:hover b{color:var(--g)}.item>.i{color:var(--mut)}
+.item.sel{background:var(--gs);margin:0 -10px;padding:12px 10px;border-radius:14px;border-top-color:transparent}
+.alert{display:flex;align-items:center;gap:12px;padding:12px 14px 12px 16px;border-radius:var(--rt);margin-bottom:16px}
+.alert.dan{background:var(--rs);color:var(--r)}.alert.warn{background:var(--as);color:var(--at)}.alert.info{background:var(--bs);color:var(--b)}.alert.pos{background:var(--gs);color:var(--g)}
+.alert .grow{color:var(--ink)}
+.tw{overflow-x:auto;margin:0 -18px}table{border-collapse:collapse;width:100%}
+th,td{text-align:left;padding:12px 18px;border-bottom:1px solid var(--line);white-space:nowrap}th{color:var(--mut);font-weight:500;font-size:12px}
+tbody tr:last-child td{border-bottom:0}tr.cl{cursor:pointer}tr.cl:hover td{background:var(--bg)}td b{font-weight:600}td small{display:block}
+.mini{display:flex;align-items:center;gap:8px}.mini .prog{width:70px;margin:0}
+.filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}.filters .search{max-width:300px;background:var(--bg)}
+.chips{display:flex;gap:6px;flex-wrap:wrap}.chip{height:36px;padding:0 14px;border-radius:99px;border:1px solid var(--line);background:var(--card);color:var(--mut);font:500 13px Inter,system-ui,sans-serif;cursor:pointer}
+.chip.on{background:var(--gs);border-color:var(--gs);color:var(--g);font-weight:600}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--mut);margin-top:10px}.legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+
+/* Météo (fond illustré toujours clair, comme sur mobile) */
+.weather{position:relative;border-radius:var(--rc);overflow:hidden;color:var(--ink);background:#dbeefa;min-height:100%}
+.weather>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:right}
+.wx{position:relative;padding:18px;display:flex;flex-direction:column;height:100%}
+.wx-c{display:flex;align-items:center;gap:6px;color:var(--mut);font-size:12px}.wx-c .i{width:14px;height:14px}
+.wx-t{font-size:34px;font-weight:700;margin-top:6px;line-height:1.1}
+.wx-m{display:grid;grid-template-columns:repeat(3,1fr);background:rgba(255,255,255,.82);border-radius:14px;padding:10px 4px;margin:16px 0 10px;text-align:center}
+.wx-m small{display:block;margin-bottom:4px}.wx-a{display:flex;gap:6px;font-size:12px;margin-top:auto}.wx-a .i{width:14px;height:14px;margin-top:1px}
+
+/* Carte bande à la une */
+.feat>img{display:block;width:100%;height:150px;object-fit:cover;object-position:50% 60%;border-radius:var(--rt);margin-bottom:14px}.feat h3{font-size:17px;font-weight:700}
+.more{display:inline-flex;align-items:center;gap:2px;color:var(--g);font-weight:600;font-size:13px;cursor:pointer;text-decoration:none}.more .i{width:15px;height:15px}
+
+/* Graphiques */
+.donut{display:flex;align-items:center;gap:22px}.donut svg{flex:none}.donut .lg{flex:1}.donut .lg .item b{font-weight:600}
+.chart-tip{font:600 11px Inter,sans-serif}
+
+/* Sanitaire : étapes de qualification */
+.steps{display:flex;margin:12px 0 4px}.steps .st{flex:1;position:relative;font-size:11px;color:var(--mut)}
+.steps .st i{display:block;width:12px;height:12px;border-radius:50%;background:var(--line);border:2px solid var(--card);box-shadow:0 0 0 1px var(--line);margin-bottom:6px;position:relative;z-index:1}
+.steps .st:not(:last-child)::before{content:"";position:absolute;left:12px;right:0;top:5px;height:2px;background:var(--line)}
+.steps .st.done i{background:var(--g);box-shadow:0 0 0 1px var(--g)}.steps .st.done::before{background:var(--g)!important}
+.steps .st.cur i{background:var(--a);box-shadow:0 0 0 1px var(--a)}.steps .st.cur{color:var(--ink);font-weight:600}
+.al{padding:16px 0;border-top:1px solid var(--line)}.ct+.al{border-top:0;padding-top:4px}.al .acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.al b{display:block;font-weight:600}
+
+/* Chronologie (comme l'historique du lot sur mobile) */
+.tl-i{position:relative;display:flex;gap:12px;padding-bottom:16px}.tl-i b{display:block;font-weight:600}
+.tl-i:not(:last-child)::before{content:"";position:absolute;left:19px;top:44px;bottom:4px;width:2px;background:var(--line)}
+
+/* Champs */
+.flds{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.fld span{display:block;font-weight:600;font-size:13px;margin-bottom:6px}.fld small{display:block;margin-top:5px}
+.inp{display:flex;align-items:center;height:44px;border:1px solid var(--line);border-radius:var(--rf);background:var(--bg);padding:0 12px}
+.inp:focus-within{border-color:var(--g)}.inp input{flex:1;min-width:0;border:0;background:none;outline:0;font:inherit;color:var(--ink)}.inp em{font-style:normal;color:var(--mut);font-size:12px}
+.sw{appearance:none;width:40px;height:24px;border-radius:99px;background:var(--line);position:relative;cursor:pointer;margin:0;transition:background .15s}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:left .15s;box-shadow:0 1px 2px rgba(0,0,0,.2)}.sw:checked{background:var(--g)}.sw:checked::after{left:19px}
+.prof{display:flex;align-items:center;gap:16px}.prof img,.prof .big-b{width:84px;height:84px;border-radius:var(--rt);object-fit:cover;flex:none}
+.prof .big-b{display:grid;place-items:center;background:var(--gs);color:var(--g)}.prof .big-b .i{width:34px;height:34px}.prof .val{font-size:26px;font-weight:700}
+.qr{padding:10px;border:1px solid var(--line);border-radius:var(--rt);background:#fff;flex:none}
+
+/* Volet latéral (fiche ferme, aperçu mobile) */
+.scrim{position:fixed;inset:0;background:rgba(15,21,18,.45);opacity:0;pointer-events:none;transition:opacity .2s;z-index:20}
+.scrim.on{opacity:1;pointer-events:auto}
+.drawer{position:absolute;right:0;top:0;bottom:0;width:min(480px,100%);background:var(--card);overflow:auto;transform:translateX(100%);transition:transform .25s;display:flex;flex-direction:column}
+.scrim.on .drawer{transform:none}
+.hero{position:relative;height:260px;flex:none}.hero img{width:100%;height:100%;object-fit:cover}
+.round{position:absolute;top:16px;left:16px;width:44px;height:44px;border-radius:50%;border:0;background:#fff;color:#1C2420;display:grid;place-items:center;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.sheet{position:relative;margin-top:-30px;background:var(--card);border-radius:var(--rsh) var(--rsh) 0 0;padding:24px;flex:1}
+.sheet h2{font-size:24px;font-weight:700}.lead{display:flex;gap:10px;color:var(--mut);margin:10px 0 18px}.lead::before{content:"";width:22px;height:2px;background:var(--g);margin-top:10px;flex:none}
+.dfoot{position:sticky;bottom:0;display:flex;gap:10px;padding:14px 24px;background:var(--card);border-top:1px solid var(--line)}.dfoot .btn{flex:1}
+.dhead{position:relative;padding:22px 24px 8px 76px;min-height:76px}.dhead h2{font-size:20px;font-weight:700}
+.seg{display:flex;gap:4px;background:var(--bg);border-radius:14px;padding:4px;margin:12px 24px}
+.seg button{flex:1;height:38px;border:0;border-radius:10px;background:none;color:var(--mut);font:600 13px Inter,system-ui,sans-serif;cursor:pointer}.seg button.on{background:var(--card);color:var(--g);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.phone{margin:12px auto 28px;width:300px;border:10px solid #1C2420;border-radius:42px;overflow:hidden;background:#1C2420}.phone img{display:block;width:100%}
+
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);opacity:0;transition:.2s;background:var(--ink);color:var(--bg);padding:12px 18px;border-radius:14px;display:flex;align-items:center;gap:10px;z-index:30;pointer-events:none;font-weight:500}
+.toast.on{opacity:1;transform:translate(-50%,0)}.toast .i{color:#4CC26B}
+
+/* Connexion */
+.auth{display:none;min-height:100vh;grid-template-columns:1.05fr 1fr}body.out .auth{display:grid}body.out .app{display:none}
+.auth-art{position:relative;overflow:hidden;min-height:100vh;color:var(--ink)}.auth-art>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 70%}
+.float{position:absolute;top:24px;left:24px;display:flex;align-items:center;gap:8px;height:44px;padding:0 18px;border-radius:99px;background:rgba(255,255,255,.88);font-weight:700;font-size:18px}.float .i{color:var(--g)}
+.auth-pts{position:absolute;left:24px;right:24px;bottom:24px;max-width:460px;background:rgba(255,255,255,.92);border-radius:var(--rc);padding:6px 18px}
+.auth-side{display:flex;flex-direction:column;padding:24px 40px;background:var(--card)}.auth-top{display:flex;justify-content:flex-end;align-items:center;gap:10px}
+.auth-box{width:100%;max-width:400px;margin:auto;padding:32px 0}.auth-box h1{font-size:26px;font-weight:700;margin:16px 0 6px}.auth-box>.sub{font-size:14px}
+.auth-box form{display:grid;gap:16px;margin:24px 0 20px}.auth-foot{text-align:center;color:var(--mut);font-size:12px}
+.btn.full{width:100%;height:48px}
+.link{display:inline-flex;align-items:center;gap:6px;background:none;border:0;padding:0;color:var(--g);font:600 14px Inter,system-ui,sans-serif;cursor:pointer}.link .i{width:16px;height:16px}
+.fld .msg{display:none;color:var(--r);margin-top:5px}.fld.err .msg{display:block}.fld.err .inp{border-color:var(--r)}
+.inp select{flex:1;min-width:0;height:100%;border:0;background:none;outline:0;padding:0}.inp input[readonly]{color:var(--mut)}
+.eye{display:grid;place-items:center;border:0;background:none;color:var(--mut);cursor:pointer;padding:0}
+.check{display:flex;align-items:center;gap:10px;cursor:pointer;font-size:13px}
+.code{display:flex;gap:12px;justify-content:center}.code input{width:64px;height:68px;text-align:center;font:700 26px Inter,system-ui,sans-serif;border:1px solid var(--line);border-radius:14px;background:var(--bg);color:var(--ink);outline:0}
+.code input:focus{border-color:var(--g)}.code.err input{border-color:var(--r)}#codeErr{display:none;text-align:center;color:var(--r)}
+.dots{display:flex;gap:6px}.dots i{width:8px;height:8px;border-radius:99px;background:var(--line)}.dots i.on{width:22px;background:var(--g)}
+
+/* Présentation (comme les écrans d'accueil du mobile) */
+.modal{position:fixed;inset:0;z-index:25;background:rgba(15,21,18,.55);display:none;place-items:center;padding:20px}.modal.on{display:grid}
+.tour{width:min(460px,100%);max-height:calc(100vh - 40px);overflow:auto;background:var(--card);border-radius:var(--rsh);display:flex;flex-direction:column}
+.tour>img{width:100%;height:290px;object-fit:cover;flex:none}.tour .sheet{text-align:center;padding:26px 28px 24px}
+.tour h2{font-size:22px}.tour p{color:var(--mut);margin:8px 0 16px}.tour .chips{justify-content:center}
+.tour-f{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:22px}.tour-f>div:last-child{display:flex;gap:8px}
+.dbody{padding:8px 24px 24px;flex:1}.dbody .sec-t{margin-top:18px}.dbody .sec-t h2{font-size:15px}
+details{border-top:1px solid var(--line);padding:14px 0}summary{display:flex;justify-content:space-between;gap:12px;cursor:pointer;font-weight:600;list-style:none}summary::-webkit-details-marker{display:none}
+details[open] summary .i{transform:rotate(180deg)}details p{color:var(--mut);margin-top:8px}
+/* Guide d'utilisation */
+.guide{display:grid;grid-template-columns:250px 1fr;gap:16px;align-items:start}
+.toc{position:sticky;top:20px;padding:14px 10px;max-height:calc(100vh - 40px);overflow:auto}.toc>b{display:block;padding:4px 10px 8px}
+.toc a{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:99px;color:var(--mut);cursor:pointer;font-size:13px}.toc a:hover{background:var(--gs);color:var(--g)}.toc a .i{width:16px;height:16px}
+.toc-act{padding:10px 4px 2px}.toc-act .btn{width:100%}
+.chaps{display:grid;gap:16px}.chap{scroll-margin-top:20px}.chap .alert{margin:14px 0 0}
+.g-img{display:block;width:100%;height:150px;object-fit:cover;border-radius:var(--rt);margin-bottom:16px}
+.g-what{margin-bottom:14px}.g-l{display:block;font-size:13px;margin-bottom:8px}
+.num{list-style:none;counter-reset:n;margin:0 0 4px;padding:0;display:grid;gap:10px}
+.num li{counter-increment:n;display:flex;gap:12px;align-items:flex-start}.num li::before{content:counter(n);flex:none;width:26px;height:26px;border-radius:50%;background:var(--gs);color:var(--g);font-weight:700;font-size:13px;display:grid;place-items:center}
+.shots{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px}.shots figure{margin:0;cursor:pointer}
+.shots img{width:100%;border-radius:18px;border:6px solid #1C2420;display:block}.shots figcaption{text-align:center;font-size:12px;color:var(--mut);margin-top:6px}
+.gloss{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.gloss div{background:var(--bg);border-radius:14px;padding:12px 14px}.gloss b{display:block}
+@media(max-width:1100px){.guide{grid-template-columns:1fr}.toc{position:static;max-height:none}.shots{grid-template-columns:repeat(2,1fr)}}
+@media print{.side,.top,.toc,.ct .btn,.scrim,.modal,.toast{display:none!important}body,.main{background:#fff;padding:0}.guide{display:block}.card{break-inside:avoid;border-color:#ddd}.chaps{gap:12px}}
+button.user{cursor:pointer;font:inherit;color:inherit;text-align:left}button.user:hover{border-color:var(--g)}
+
+@media(max-width:1280px){.g-top,.g-2{grid-template-columns:1fr}.k4{grid-template-columns:repeat(2,1fr)}.user .who{display:none}.user{padding:0 4px}}
+@media(max-width:900px){.app{flex-direction:column}.side{position:sticky;top:0;z-index:10;width:100%;height:auto;flex-direction:row;align-items:center;padding:8px 10px;border-right:0;border-bottom:1px solid var(--line)}
+.logo{padding:0 10px 0 4px}.grp,.promo,.apk-side,.side-foot{display:none}.nav{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}.nav a{white-space:nowrap;margin:0}
+.main{padding:16px}.top{flex-wrap:wrap}.search{order:9;max-width:none;flex-basis:100%}.k3,.g-h,.g-l{grid-template-columns:1fr}.banner .txt{max-width:65%}.banner img{width:45%}#exp{display:none}}
+@media(max-width:900px){.auth{grid-template-columns:1fr}.auth-art{min-height:240px}.auth-pts{display:none}.auth-side{padding:20px}}
+@media(max-width:560px){.k2,.k4{grid-template-columns:1fr}.banner h1,.head h1{font-size:22px}.donut{flex-direction:column}}
+</style></head><body><script src="assets/web/splash.js"></script>
+<div class="app">
+  <aside class="side">
+    <div class="logo"><i data-lucide="leaf" class="i"></i>Poufa</div>
+    <nav class="nav" id="nav"></nav>
+    <div class="apk-side">
+      <div><b>Application mobile</b><small>À installer sur les téléphones des éleveurs et des agents terrain.</small></div>
+      <div class="apk-code"><em>Code</em>1234</div>
+      <a class="btn" href="https://file.pizza/download/wnkig5o5" target="_blank" rel="noopener" onclick="event.stopPropagation()"><i data-lucide="download" class="i"></i>Télécharger l’APK</a>
+      <button type="button" class="btn sec sm" onclick="openPhone(0)">Voir l’aperçu</button>
+    </div>
+    <div class="side-foot"><a onclick="openHelp()"><i data-lucide="circle-help" class="i"></i>Aide et support</a><a onclick="logout()"><i data-lucide="log-out" class="i"></i>Se déconnecter</a></div>
+  </aside>
+  <main class="main">
+    <div class="top">
+      <label class="search"><i data-lucide="search" class="i"></i><input id="q0" placeholder="Rechercher une ferme, une localité…" oninput="gq()"></label>
+      <select id="prov" class="ml" aria-label="Province"><option value="">Toutes les provinces</option></select>
+      <button class="btn sec" id="exp" onclick="exp()"><i data-lucide="download" class="i"></i>Exporter</button>
+      <span class="pill pos"><i data-lucide="wifi" class="i"></i>En ligne</span>
+      <button class="ibtn" onclick="theme()" aria-label="Changer de thème" id="thm"></button>
+      <button class="ibtn" onclick="openNotif()" aria-label="Notifications"><i data-lucide="bell" class="i"></i><span class="dot" id="bell"></span></button>
+      <button class="user" id="user" onclick="openProfile()" aria-label="Mon compte"></button>
+    </div>
+    <div id="v"></div>
+  </main>
+</div>
+<div class="auth" id="auth"></div>
+<div class="modal" id="modal"></div>
+<div class="scrim" id="scrim" onclick="if(event.target===this)closeDrawer()"><aside class="drawer" id="dr"></aside></div>
+<div class="toast" id="ts"></div>
+<script>
+const IMG="assets/illustrations/",SHOT="assets/screenshots/";
+const APK={url:"https://file.pizza/download/wnkig5o5",code:"1234"};
+const apkBanner=()=>`<aside class="apk-banner" aria-label="Télécharger l’application mobile">
+<span class="badge">${ic("smartphone")}</span>
+<div class="grow"><b>Installer l’application mobile</b><small>Téléchargez l’APK, puis installez-la sur les téléphones des éleveurs et des agents terrain. Code d’accès au fichier : <b>${APK.code}</b>.</small></div>
+<div class="code-box"><span>Code</span><strong>${APK.code}</strong></div>
+<a class="btn" href="${APK.url}" target="_blank" rel="noopener">${ic("download")}Télécharger l’APK</a>
+</aside>`;
+const apkPanel=()=>card(cardTitle("smartphone","Application mobile (APK)","","Pour les éleveurs et les agents terrain")+`
+<p class="sub" style="margin-bottom:14px">L’administration pilote le programme ; les saisies se font sur le téléphone. Téléchargez l’APK ici, ouvrez le lien, saisissez le code, puis installez le fichier sur chaque appareil.</p>
+<div class="apk-banner" style="margin:0">
+<div class="code-box"><span>Code fichier</span><strong>${APK.code}</strong></div>
+<div class="grow"><b>Lien de téléchargement</b><small>${APK.url}</small></div>
+<a class="btn" href="${APK.url}" target="_blank" rel="noopener">${ic("download")}Télécharger</a>
+</div>
+<div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">${btn("Copier le code",{sec:true,sm:true,icon:"copy",on:`navigator.clipboard.writeText('${APK.code}');toast('Code ${APK.code} copié')`})}${btn("Copier le lien",{sec:true,sm:true,icon:"link",on:`navigator.clipboard.writeText('${APK.url}');toast('Lien copié')`})}${btn("Voir l’aperçu",{sec:true,sm:true,icon:"smartphone",on:"openPhone(0)"})}</div>`);
+const $=s=>document.querySelector(s);
+const sum=(a,k)=>a.reduce((s,x)=>s+x[k],0),avg=(a,k)=>a.length?sum(a,k)/a.length:0;
+const nf=n=>Math.round(n).toLocaleString("fr-FR").replace(/\u202f/g,"\u00a0");
+const dec=(n,d=1)=>(+n).toFixed(d).replace(".",",");
+const pct=(n,d=1)=>dec(n,d)+"\u00a0%";
+const fcfa=n=>dec(n/1e6)+"\u00a0M FCFA";
+
+/* ---------- Référentiels et données (vides tant que rien n’est saisi) ---------- */
+const PROV=[["Estuaire","EST",[["Owendo",9.5,.29],["Ntoum",9.77,.39],["Libreville",9.45,.42],["Kango",10.12,.15]]],["Haut-Ogooué","HOG",[["Franceville",13.58,-1.63],["Moanda",13.2,-1.57],["Bongoville",13.55,-1.42]]],["Ogooué-Maritime","OGM",[["Port-Gentil",8.78,-.72],["Gamba",10,-2.65],["Omboué",9.26,-1.57]]],["Woleu-Ntem","WNT",[["Oyem",11.58,1.6],["Bitam",11.5,2.08],["Mitzic",11.55,.78]]],["Moyen-Ogooué","MOG",[["Lambaréné",10.24,-.7],["Ndjolé",10.77,-.18]]],["Ngounié","NGO",[["Mouila",11.06,-1.87],["Fougamou",10.58,-1.22],["Lebamba",11.48,-2.2]]]];
+let n=0,F=[],A=[],LOT=[],TK=[],YD=[0,0,0,0,0,0,0,0,0,0],LOG=[];
+const R=[["Éleveur","sa ferme"],["Agent technique","ses fermes"],["POUFA / DGE","toutes"],["Services vétérinaires","volet sanitaire"],["BCEG","fermes financées"],["MAEDR","données agrégées"],["Administrateur","administration"]],D=["Consulter","Créer","Modifier","Valider","Administrer"],M=[[1,0,0,0,0],[1,1,1,0,0],[1,1,1,1,0],[1,1,1,1,0],[1,0,0,0,0],[1,0,0,1,0],[1,1,1,1,1]];
+const MO=["Jan","Fév","Mar","Avr","Mai","Juin","Juil","Août","Sep","Oct"];let ci=9,curLot=0,fs="";
+let W=null;
+const fl=()=>F.filter(f=>!$("#prov").value||f.prov==$("#prov").value);
+const empty=(icon,title,msg)=>alertBanner("info",icon,`<b>${title}</b><br>${msg}`);
+
+/* ---------- Composants réutilisables ---------- */
+const ic=(n,c="")=>`<i data-lucide="${n}" class="i ${c}"></i>`;
+const TONE={"Opérationnelle":"pos","Validé":"pos","Fait":"pos","À jour":"pos","Conforme":"pos","Normale":"pos","Bonne":"pos","Faible":"pos","En préparation":"warn","En analyse":"warn","À faire":"warn","En attente de réception":"warn","Non cédé":"warn","À surveiller":"warn","Suspendue":"dan","Nouvelle":"dan","Confirmée":"dan","En retard":"dan","Élevée":"dan","Infirmée":"info","Close":"info","Clôturée":"info","En cours":"info","Cession enregistrée":"info"};
+const pill=(t,tone=TONE[t]||"pos",icon)=>`<span class="pill ${tone}">${icon?ic(icon):""}${t}</span>`;
+const badge=(icon,tone="")=>`<span class="badge ${tone}">${ic(icon)}</span>`;
+const card=(body,cls="",id="")=>`<section class="card ${cls}"${id?` id="${id}"`:""}>${body}</section>`;
+const cardTitle=(icon,title,trail="",sub="")=>`<div class="ct">${badge(icon)}<div class="grow"><h3>${title}</h3>${sub?`<small>${sub}</small>`:""}</div>${trail}</div>`;
+const btn=(label,{icon,sec,sm,on="",dis}={})=>`<button class="btn${sec?" sec":""}${sm?" sm":""}" onclick="${on}"${dis?" disabled":""}>${icon?ic(icon):""}${label}</button>`;
+const kpi=({icon,label,value,note,tone,trend})=>card(`<div class="kt">${badge(icon)}${label}</div><div class="val">${value}</div><div class="note ${tone||""}">${trend?ic(trend):""}${note}</div>`,"kpi");
+const banner=(img,title,sub,pos="50% 50%")=>`<div class="banner"><img src="${IMG+img}.jpg" alt="" style="object-position:${pos}"><div class="txt"><h1>${title}</h1><p>${sub}</p></div></div>`;
+const tile=({img,label,status,tone,go})=>`<a class="card tile" href="#${go}"><img src="${IMG+img}.jpg" alt="">${`<b>${label}</b>`}${pill(status,tone)}</a>`;
+const progress=(v,tone="")=>`<div class="prog ${tone}"><span style="width:${Math.min(100,v)}%"></span></div>`;
+const statBlock=(title,rows)=>`<div class="sb"><div class="sb-h">${title}</div>${rows.map(r=>`<div class="sb-r" style="grid-template-columns:repeat(${r.length},1fr)">${r.map(c=>`<div><b class="${c.tone||""}">${c.v}</b><span>${c.l}</span></div>`).join("")}</div>`).join("")}</div>`;
+const item=(icon,title,meta,trail="",on="",tone="",cls="")=>`<div class="item${on?" cl":""} ${cls}"${on?` onclick="${on}"`:""}>${icon?badge(icon,tone):""}<div class="grow"><b>${title}</b><small>${meta}</small></div>${trail}${on?ic("chevron-right"):""}</div>`;
+const alertBanner=(tone,icon,html,action="")=>`<div class="alert ${tone}">${ic(icon)}<div class="grow">${html}</div>${action}</div>`;
+const secTitle=(t,trail="")=>`<div class="sec-t"><h2>${t}</h2>${trail}</div>`;
+const timeline=items=>`<div class="tl">${items.map(t=>`<div class="tl-i">${badge(t.icon,t.tone||"")}<div><b>${t.title}</b><small>${t.meta}</small></div></div>`).join("")}</div>`;
+/* Champ : libellé au-dessus, aide et erreur en dessous (o = id, type, ph, options, change, attrs, trail) */
+const field=(l,v="",help="",unit="",o={})=>`<label class="fld"${o.id?` id="f-${o.id}"`:""}><span>${l}</span><div class="inp">${o.options?`<select${o.id?` id="${o.id}"`:""} onchange="${o.change||""}">${o.options.map(x=>`<option${x==v?" selected":""}>${x}</option>`).join("")}</select>`:`<input${o.id?` id="${o.id}"`:""} type="${o.type||"text"}" value="${v}" placeholder="${o.ph||""}" ${o.attrs||""}>`}${unit?`<em>${unit}</em>`:""}${o.trail||""}</div><small class="msg"></small>${help?`<small>${help}</small>`:""}</label>`;
+const setErr=(id,msg)=>{const f=$("#f-"+id);f.classList.toggle("err",!!msg);f.querySelector(".msg").textContent=msg||"";return !msg};
+const val=id=>$("#"+id).value.trim();
+const firstErr=()=>{const f=$(".fld.err input,.fld.err select");f&&(f.focus(),f.closest(".fld").scrollIntoView({block:"center",behavior:"smooth"}));return false};
+const frDate=v=>v.split("-").reverse().join("/");
+const closeBtn=()=>`<button class="round" type="button" onclick="closeDrawer()" aria-label="Fermer">${ic("x")}</button>`;
+const sheetHead=(title,sub)=>`<div class="dhead">${closeBtn()}<h2>${title}</h2><small>${sub}</small></div>`;
+const colorChips=()=>`<div class="chips">${pill("Vert : tout va bien","pos","circle-check")}${pill("Ambre : à surveiller","warn","triangle-alert")}${pill("Rouge : problème","dan","circle-alert")}${pill("Bleu : information","info","info")}</div>`;
+const table=(h,rows,onRow)=>`<div class="tw"><table><thead><tr>${h.map(x=>`<th>${x}</th>`).join("")}</tr></thead><tbody>${rows.map((r,i)=>`<tr${onRow?` class="cl" onclick="${onRow(i)}"`:""}>${r.map(c=>`<td>${c}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+const mLevel=m=>m>4?["Élevée","dan"]:m>3?["À surveiller","warn"]:["Normale","pos"];
+const farmCell=f=>`<b>${f.id}</b><small>${f.loc}</small>`;
+const plural=(k,w)=>`${k} ${w}${k>1?"s":""}`;
+
+/* Météo : mêmes règles que l'application mobile ; absente tant qu’aucune donnée n’est reçue */
+function weather(){if(!W)return empty("cloud-off","Météo indisponible","Elle s’affichera dès qu’une station ou l’application mobile fournira une lecture.");
+const heat=W.t>=32?["Élevée","dan"]:W.t>=28?["À surveiller","warn"]:["Bonne","pos"],hum=W.hum>80?["Élevée","warn"]:["Bonne","pos"],rain=W.rain>=60?["Forte","info"]:["Faible","pos"];
+return`<section class="weather light"><img src="${IMG}weather_cloud.jpg" alt=""><div class="wx"><div class="wx-c">${ic("map-pin")}${W.city}</div><div class="wx-t">${W.t} °C</div><small>${W.sky} · humidité ${W.hum} %</small>
+<div class="wx-m">${[["Chaleur",heat],["Humidité",hum],["Pluie",rain]].map(([l,[t,c]])=>`<div><small>${l}</small>${pill(t,c)}</div>`).join("")}</div>
+<div class="wx-a">${ic("info")}<span>${W.t>=28?"Chaleur à surveiller : rappelez aux éleveurs d’aérer les poulaillers et de vérifier l’eau.":"Conditions favorables pour les élevages."}</span></div></div></section>`}
+
+/* Graphiques : vert, bleu, violet, dans cet ordre */
+function yc(){if(!YD.some(v=>v>0))return empty("chart-line","Aucune production enregistrée","La courbe se remplit au fil des clôtures de bande.");
+const X=i=>44+i*52,Y=v=>190-v/60*170,p=YD.map((v,i)=>[X(i),Y(v)]);let d=`M${p[0]}`;for(let i=1;i<p.length;i++)d+=`Q${p[i-1]} ${(p[i-1][0]+p[i][0])/2},${(p[i-1][1]+p[i][1])/2}`;d+=`L${p.at(-1)}`;
+return`<svg viewBox="0 0 540 222" width="100%" onmousemove="ci=Math.max(0,Math.min(9,Math.round((event.offsetX/this.clientWidth*540-44)/52)));$('#yc').innerHTML=yc()"><defs><linearGradient id="gr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1F9D40" stop-opacity=".22"/><stop offset="1" stop-color="#1F9D40" stop-opacity="0"/></linearGradient></defs>
+${[0,20,40,60].map(v=>`<line x1="34" x2="530" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--line)"/><text x="26" y="${Y(v)+4}" text-anchor="end" font-size="11" fill="var(--mut)">${v}</text>`).join("")}
+<path d="${d}L${X(9)},190L${X(0)},190z" fill="url(#gr)"/><path d="${d}" fill="none" stroke="var(--g)" stroke-width="2.5"/>
+${MO.map((m,i)=>`<text x="${X(i)}" y="212" text-anchor="middle" font-size="11" fill="${i==ci?"var(--ink)":"var(--mut)"}" font-weight="${i==ci?600:400}">${m}</text>`).join("")}
+<line x1="${X(ci)}" x2="${X(ci)}" y1="${Y(YD[ci])}" y2="190" stroke="var(--g)" stroke-dasharray="3 3"/><circle cx="${X(ci)}" cy="${Y(YD[ci])}" r="6" fill="var(--card)" stroke="var(--g)" stroke-width="2.5"/>
+<rect x="${X(ci)-30}" y="${Y(YD[ci])-38}" width="60" height="26" rx="13" fill="var(--g)"/><text x="${X(ci)}" y="${Y(YD[ci])-21}" text-anchor="middle" class="chart-tip" fill="#fff">${YD[ci]} t</text></svg>`}
+function donut(f){const by=PROV.map(p=>[p[0],sum(f.filter(x=>x.prov==p[0]),"vol")]).filter(p=>p[1]).sort((a,b)=>b[1]-a[1]),tot=by.reduce((s,p)=>s+p[1],0);
+if(!tot)return empty("chart-pie","Pas encore de production","Ajoutez des fermes et suivez les bandes pour voir la répartition.");
+const segs=by.length>3?[by[0],by[1],["Autres provinces",by.slice(2).reduce((s,p)=>s+p[1],0)]]:by,col=["var(--g)","var(--b)","var(--v)"],C=2*Math.PI*58;let off=0;
+const arcs=segs.map((s,i)=>{const len=s[1]/tot*C,a=`<circle r="58" cx="80" cy="80" fill="none" stroke="${col[i]}" stroke-width="20" stroke-dasharray="${Math.max(0,len-3)} ${C}" stroke-dashoffset="${-off}" transform="rotate(-90 80 80)"/>`;off+=len;return a}).join("");
+return`<div class="donut"><svg viewBox="0 0 160 160" width="160">${arcs}<text x="80" y="80" text-anchor="middle" font-size="24" font-weight="700" fill="var(--ink)">${tot} t</text><text x="80" y="98" text-anchor="middle" font-size="11" fill="var(--mut)">ce mois</text></svg>
+<div class="lg">${segs.map((s,i)=>`<div class="item"><i style="width:10px;height:10px;border-radius:50%;background:${col[i]};flex:none"></i><div class="grow">${s[0]}</div><b>${s[1]} t</b><small style="width:44px;text-align:right">${pct(s[1]/tot*100,0)}</small></div>`).join("")}</div></div>`}
+function bars(f){const by=PROV.map(p=>{const v=sum(f.filter(x=>x.prov==p[0]),"vol")*2.8;return[p[1],v,v*.78]}).filter(b=>b[1]);
+if(!by.length)return empty("chart-column","Pas encore de chiffre d’affaires","Les ventes et charges apparaîtront avec les cessions de lots.");
+const max=Math.max(...by.map(b=>b[1]))*1.15,gw=490/by.length,H=v=>v/max*170;
+return`<svg viewBox="0 0 540 222" width="100%">${[0,.5,1].map(t=>`<line x1="40" x2="530" y1="${190-170*t}" y2="${190-170*t}" stroke="var(--line)"/><text x="32" y="${194-170*t}" text-anchor="end" font-size="11" fill="var(--mut)">${Math.round(max*t)}</text>`).join("")}
+${by.map((b,i)=>{const x=40+i*gw+gw/2;return`<rect x="${x-24}" y="${190-H(b[1])}" width="22" height="${H(b[1])}" rx="6" fill="var(--g)"/><rect x="${x+2}" y="${190-H(b[2])}" width="22" height="${H(b[2])}" rx="6" fill="var(--b)"/><text x="${x}" y="212" text-anchor="middle" font-size="11" fill="var(--mut)">${b[0]}</text>`}).join("")}</svg>
+<div class="legend"><span><i style="background:var(--g)"></i>Chiffre d’affaires (M FCFA)</span><span><i style="background:var(--b)"></i>Charges (M FCFA)</span></div>`}
+function qr(s){let h=0;for(const c of s)h=(h*31+c.charCodeAt(0))>>>0;let o="";for(let y=0;y<15;y++)for(let x=0;x<15;x++){const e=(x<4&&y<4)||(x>10&&y<4)||(x<4&&y>10);h=(h*1103515245+12345)>>>0;if(e||(h>>>16)%2)o+=`<rect x="${x*8}" y="${y*8}" width="8" height="8"/>`}return`<svg class="qr" viewBox="0 0 120 120" width="150" fill="#1C2420">${o}</svg>`}
+
+/* ---------- Écrans ---------- */
+const TT={dashboard:["Tableau de bord","Pilotez le programme POUFA avec des indicateurs en temps réel"],
+fermes:["Fermes et bandes","Registre unique : statut, cohorte et indicateurs par ferme.","coop_hero","50% 60%"],
+carte:["Carte des fermes","Répartition des fermes et zones à risque selon la mortalité.","agent","50% 52%"],
+intrants:["Intrants et stocks","Livraisons, utilisation déclarée et recoupement.","tile_inputs","50% 68%"],
+sanitaire:["Suivi sanitaire","Qualification des alertes par les services vétérinaires.","health","50% 58%"],
+economique:["Suivi économique","Ventes, charges, coût de production et marge.","colors","50% 75%"],
+tracabilite:["Traçabilité des lots","De la ferme au consommateur grâce au QR code.","tile_lot","50% 72%"],
+rapports:["Rapports et exports","Rapports automatiques, exports conformes aux droits.","tile_entry","50% 40%"],
+parametrage:["Paramétrage","Aucune règle codée en dur : tout se règle ici.","offline","50% 62%"],
+utilisateurs:["Utilisateurs et journal","Chacun ne voit que ce qui le concerne.","farmer","50% 35%"],
+application:["Application mobile","Téléchargez l’APK pour les éleveurs et les agents.","welcome","50% 40%"],
+guide:["Guide d’utilisation","Comment utiliser l’administration et l’application mobile, écran par écran.","admin_login","50% 40%"]};
+const NAV=[["Pilotage",[["dashboard","Tableau de bord","layout-dashboard"],["fermes","Fermes et bandes","warehouse"],["carte","Carte des fermes","map"]]],["Filière",[["intrants","Intrants et stocks","package"],["sanitaire","Suivi sanitaire","heart-pulse"],["economique","Économique","hand-coins"],["tracabilite","Traçabilité des lots","qr-code"]]],["Administration",[["rapports","Rapports et exports","file-text"],["parametrage","Paramétrage","settings"],["utilisateurs","Utilisateurs et journal","users"],["application","Application mobile","smartphone"]]],["Aide",[["guide","Guide d’utilisation","book-open"]]]];
+
+function featured(x){if(!x)return card(cardTitle("warehouse","Bande à la une","","Aucune bande en cours")+empty("bird","Aucune ferme suivie","Créez une ferme dans « Fermes et bandes » pour commencer le suivi."));
+const ml=mLevel(x.mort);return card(`<div class="feat"><img src="${IMG}coop_hero.jpg" alt=""><div>
+<div class="row-b"><h3>Bande à la une · Ferme ${x.id}</h3>${pill(x.day>0?"En cours":"En préparation",x.day>0?"pos":"info")}</div><small>${x.loc}, ${x.prov}${x.day>0?` · jour ${x.day} sur 45`:""}</small>
+<div class="row-b" style="margin-top:14px"><small>Progression</small><small>Jour ${x.day} sur 45</small></div>${progress(x.day/45*100)}
+${statBlock("Indicateurs de la bande",[[{v:nf(x.cap*(1-x.mort/100)),l:"Effectif présent"},{v:pct(x.mort),l:"Mortalité",tone:ml[1]=="pos"?"":ml[1]},{v:x.ic?dec(x.ic,2):"—",l:"Indice de conso."}]])}
+<a class="more" onclick="openFarm('${x.id}')">Voir le détail ${ic("chevron-right")}</a></div></div>`)}
+
+const V={
+dashboard(){const f=fl(),ops=f.filter(x=>x.st=="Opérationnelle").length,m=avg(f,"mort"),ml=f.length?mLevel(m):["—",""],na=A.filter(a=>a[2]=="Nouvelle"),late=f.filter(x=>x.sai<80).length,gaps=f.filter(x=>x.gap>10).length,nc=LOT.filter(l=>l[4]=="Non cédé").length,star=f.find(x=>x.day>0)||f[0];
+return`${apkBanner()}
+${na.length?alertBanner("dan","triangle-alert",`<b>${plural(na.length,"alerte")} sanitaire à qualifier</b> · ${na[0][1]} : ${na[0][0].toLowerCase()}`,btn("Ouvrir",{sm:true,sec:true,on:"go('sanitaire')"})):""}
+${!f.length?alertBanner("info","info",`<b>Aucune ferme enregistrée</b> · ajoutez la première depuis « Fermes et bandes ».`,btn("Nouvelle ferme",{sm:true,sec:true,on:"go('fermes');newFarm()"})):""}
+<div class="grid g-top">${weather()}<div class="grid k2" style="margin:0">
+${kpi({icon:"warehouse",label:"Fermes opérationnelles",value:`${ops} / ${f.length}`,note:f.length?"Fermes suivies dans le programme":"Aucune ferme",tone:f.length?"pos":"info"})}
+${kpi({icon:"activity",label:"Mortalité moyenne",value:f.length?pct(m):"—",note:f.length?ml[0]:"Sans données",tone:f.length?ml[1]:"info"})}
+${kpi({icon:"clipboard-pen",label:"Taux de saisie",value:f.length?pct(avg(f,"sai"),0):"—",note:!f.length?"Sans données":late?`${plural(late,"ferme")} en retard`:"Toutes les fermes à jour",tone:!f.length?"info":late?"warn":"pos"})}
+${kpi({icon:"hand-coins",label:"Chiffre d’affaires",value:sum(f,"vol")?fcfa(sum(f,"vol")*2.8e6):"—",note:sum(f,"vol")?"Selon les ventes déclarées":"Sans ventes",tone:sum(f,"vol")?"pos":"info"})}</div></div>
+<div class="grid g-2">${card(cardTitle("chart-line","Production mensuelle",pill("Année en cours","info"),"Tonnes de poulet de chair")+`<div id="yc">${yc()}</div>`)}${featured(star)}</div>
+${secTitle("Piloter le programme")}<div class="grid k4">
+${tile({img:"tile_entry",label:"Saisies",status:!f.length?"Aucune ferme":late?`${plural(late,"ferme")} en retard`:"À jour",tone:!f.length?"info":late?"warn":"pos",go:"fermes"})}
+${tile({img:"tile_health",label:"Sanitaire",status:na.length?plural(na.length,"alerte")+" nouvelle"+(na.length>1?"s":""):"Aucune alerte",tone:na.length?"dan":"pos",go:"sanitaire"})}
+${tile({img:"tile_inputs",label:"Intrants",status:!f.length?"Aucune ferme":gaps?`${plural(gaps,"ferme")} en écart`:"Conforme",tone:!f.length?"info":gaps?"warn":"pos",go:"intrants"})}
+${tile({img:"tile_lot",label:"Traçabilité",status:!LOT.length?"Aucun lot":nc?`${plural(nc,"lot")} non cédé${nc>1?"s":""}`:"Tous cédés",tone:!LOT.length?"info":nc?"warn":"pos",go:"tracabilite"})}</div>
+<div class="grid g-2">${card(cardTitle("list-checks","Tâches et visites",btn("Ajouter une tâche",{icon:"plus",sm:true,sec:true,on:"newTask()"}))+(TK.length?TK.map(t=>item(t[4],t[0],`${t[1]} · échéance ${t[2]}`,pill(t[3]))).join(""):empty("list-checks","Aucune tâche","Ajoutez une tâche ou programmez une visite depuis une fiche ferme.")))}
+${card(cardTitle("chart-pie","Production par province","",`${f.length} ferme${f.length>1?"s":""} suivie${f.length>1?"s":""}`)+donut(f))}</div>`},
+
+fermes:()=>card(`<div class="filters"><label class="search">${ic("search")}<input id="q" placeholder="Identifiant ou localité" oninput="tb()"></label><div class="chips">${["","Opérationnelle","En préparation","Suspendue"].map(s=>`<button class="chip${fs==s?" on":""}" onclick="fs='${s}';render()">${s||"Toutes"}</button>`).join("")}</div><span class="ml"></span>${btn("Nouvelle ferme",{icon:"plus",on:"newFarm()"})}</div><div id="tbd"></div>`),
+
+carte(){const f=fl(),px=(lo,la)=>[(lo-8.4)*100,(2.5-la)*100],GA=[[9.8,1],[9.35,.6],[9.3,.2],[9,-.3],[8.7,-.65],[9,-1.1],[9.3,-1.6],[9.6,-2.1],[10.1,-2.6],[10.6,-3.1],[11.1,-3.9],[11.6,-3.4],[11.9,-3.1],[11.7,-2.7],[12,-2.4],[12.5,-2.3],[12.8,-1.9],[13.4,-2.3],[13.9,-2.4],[14.1,-1.9],[14.4,-1.6],[14.3,-.6],[14.1,-.4],[14,0],[13.9,.5],[14,1],[13.3,1.25],[13.2,1.6],[13.3,2.15],[12.4,2.25],[11.35,2.3],[11.33,1],[10,1]];
+const col={pos:"var(--g)",warn:"var(--a)",dan:"var(--r)"},risk=[...f].sort((a,b)=>b.mort-a.mort).slice(0,6);
+return`<div class="grid g-l">${card(cardTitle("map","Gabon · fermes suivies","",`${f.length} fermes · cliquez sur un point`)+`<svg viewBox="0 0 620 660" width="100%" style="max-height:560px"><path d="M${GA.map(p=>px(...p)).join("L")}z" fill="var(--gs)" stroke="var(--g)" stroke-opacity=".35" stroke-width="2" stroke-linejoin="round"/>
+${f.map(x=>{const[cx,cy]=px(x.x,x.y),l=mLevel(x.mort);return`<g style="cursor:pointer" onclick="openFarm('${x.id}')"><title>${x.id} · ${x.loc} · mortalité ${pct(x.mort)}</title><circle cx="${cx}" cy="${cy}" r="11" fill="${col[l[1]]}" stroke="var(--card)" stroke-width="3"/></g>`}).join("")}</svg>
+<div class="legend"><span><i style="background:var(--g)"></i>Normale (≤ 3 %)</span><span><i style="background:var(--a)"></i>À surveiller (3 à 4 %)</span><span><i style="background:var(--r)"></i>Élevée (&gt; 4 %)</span></div>`)}
+${card(cardTitle("triangle-alert","Fermes à surveiller","","Classées par mortalité")+(risk.length?risk.map(x=>item("","Ferme "+x.id,`${x.loc} · mortalité ${pct(x.mort)}`,pill(mLevel(x.mort)[0]),`openFarm('${x.id}')`)).join(""):empty("map-pin","Aucune ferme sur la carte","Ajoutez des fermes pour voir les zones à risque.")))}</div>`},
+
+intrants(){const f=fl(),gaps=f.filter(x=>x.gap>10);
+return`<div class="grid k3">${kpi({icon:"bird",label:"Poussins livrés",value:f.length?nf(sum(f,"liv")*100):"—",note:"Depuis le début des bandes"})}${kpi({icon:"wheat",label:"Stock d’aliment",value:f.length?nf(sum(f,"s")*50)+" kg":"—",note:"Déclaré par les éleveurs"})}${kpi({icon:"triangle-alert",label:"Fermes en écart",value:gaps.length,note:!f.length?"Sans données":gaps.length?"Écart supérieur à 10 %":"Aucun écart",tone:!f.length?"info":gaps.length?"warn":"pos"})}</div>
+${card(cardTitle("package-check","Recoupement livraisons et déclarations","","En sacs de 50 kg")+(f.length?table(["Ferme","Livré","Utilisé","Stock","Écart","Statut"],f.map(x=>[farmCell(x),x.liv,x.u,x.s,pct(x.gap),x.gap>10?pill("À vérifier","warn"):pill("Conforme")]),i=>`openFarm('${f[i].id}')`):empty("package","Aucun stock à recouper","Les livraisons et déclarations apparaîtront avec les fermes.")))}`},
+
+sanitaire(){return`<div class="grid g-2">${card(cardTitle("stethoscope","Qualification des alertes","",`Nouvelle, en analyse, qualifiée, close. Publication par l’autorité vétérinaire seule.`)+(A.length?A.map((a,i)=>{const k=a[2]=="Nouvelle"?0:a[2]=="En analyse"?1:a[2]=="Close"?3:2;
+return`<div class="al"><div class="row-b"><div><b>${a[0]}</b><small>Ferme ${a[1]} · ${a[3]}</small></div>${pill(a[2]=="Close"?"Close":a[2])}</div>
+<div class="steps">${["Nouvelle","En analyse",a[4]||"Qualifiée","Close"].map((l,j)=>`<div class="st ${j<k||k==3?"done":j==k?"cur":""}"><i></i>${l}</div>`).join("")}</div>
+<div class="acts">${a[2]=="Nouvelle"?btn("Prendre en analyse",{sm:true,sec:true,on:`setA(${i},'En analyse')`}):a[2]=="En analyse"?btn("Confirmer",{sm:true,sec:true,on:`setA(${i},'Confirmée')`})+btn("Infirmer",{sm:true,sec:true,on:`setA(${i},'Infirmée')`}):a[2]=="Close"?"":btn("Clôturer",{sm:true,sec:true,on:`setA(${i},'Close')`})}${btn("Voir la ferme",{sm:true,sec:true,icon:"warehouse",on:`openFarm('${a[1]}')`})}</div></div>`}).join(""):empty("heart-pulse","Aucune alerte sanitaire","Les alertes naissent des saisies des éleveurs (mortalité ou signes déclarés).")))}
+<div>${card(cardTitle("syringe","Vaccinations en retard")+empty("syringe","Aucun retard","Les vaccins non faits apparaîtront dès qu’une bande sera suivie."))}
+<div style="height:16px"></div>${alertBanner("info","info","Une alerte n’est jamais publiée sans qualification vétérinaire. Chaque changement est journalisé.")}</div></div>`},
+
+economique(){const f=fl(),sold=f.filter(x=>x.vol>0),ca=sum(f,"vol")*2.8e6,ch=ca*.78;
+return`<div class="grid k3">${kpi({icon:"hand-coins",label:"Chiffre d’affaires",value:ca?fcfa(ca):"—",note:ca?"Selon les ventes déclarées":"Sans ventes",tone:ca?"pos":"info"})}${kpi({icon:"wallet",label:"Charges",value:ca?fcfa(ch):"—",note:"Aliment, poussins, soins",tone:ca?"":"info"})}${kpi({icon:"trending-up",label:"Marge",value:ca?fcfa(ca-ch):"—",note:ca?"Taux de marge 22 %":"Sans données",tone:ca?"pos":"info"})}</div>
+<div class="grid g-h">${card(cardTitle("chart-column","Par province","",ca?"Ventes et charges":"En attente de données")+bars(f))}${card(cardTitle("warehouse","Rentabilité par ferme")+(sold.length?table(["Ferme","Ventes","Coût / kg vif","Marge"],sold.map(x=>[farmCell(x),x.vol+" t",nf(1900+x.mort*40)+" FCFA",fcfa(x.vol*2.8e6*.22)]),i=>`openFarm('${sold[i].id}')`):empty("hand-coins","Aucune vente","Les marges apparaîtront avec les cessions de lots.")))}</div>`},
+
+tracabilite(){if(!LOT.length)return card(cardTitle("qr-code","Lots","","Aucun lot enregistré")+empty("qr-code","Aucun lot à tracer","Les lots sont créés avec chaque bande, depuis la ferme jusqu’à la cession."));
+const l=LOT[Math.min(curLot,LOT.length-1)];return`<div class="grid g-l">${card(cardTitle("qr-code","Lots","",`${LOT.length} lot${LOT.length>1?"s":""} enregistré${LOT.length>1?"s":""}`)+LOT.map((x,i)=>item("",x[0],`${x[1]} · ${x[3]}`,pill(x[4]),`curLot=${i};render()`,"",i==curLot?"sel":"")).join(""))}
+${card(`<div class="row-b" style="margin-bottom:16px"><div><h3 style="font-size:17px">${l[0]}</h3><small>Ferme ${l[0].slice(0,7)} · ${l[1]}</small></div>${pill(l[4])}</div>
+<div style="display:flex;gap:24px;flex-wrap:wrap;align-items:flex-start">${qr(l[0])}<div class="grow">${timeline([{icon:"bird",title:"Livraison des poussins",meta:"Identifiant du lot créé"},{icon:"syringe",title:"Vaccinations et traitements",meta:"Repris automatiquement des saisies"},{icon:"scale",title:"Mortalités et pesées",meta:"Suivies jour après jour"},{icon:"truck",title:l[2]=="—"?"Cession à venir":"Cession le "+l[2],meta:l[3],tone:l[2]=="—"?"warn":""}])}</div></div>
+${alertBanner("info","info","Le QR code renvoie vers la fiche du lot, sans donnée personnelle. Ce n’est pas un certificat sanitaire.")}
+<div style="display:flex;gap:10px">${btn("Imprimer l’étiquette",{icon:"printer",on:"toast('Étiquette envoyée à l’impression')"})}${btn("Copier le lien",{sec:true,icon:"link",on:"toast('Lien de la fiche copié')"})}</div>`)}</div>`},
+
+rapports:()=>`<div class="grid g-2">${card(cardTitle("file-text","Rapports automatiques")+[["calendar","Rapport hebdomadaire","Chaque lundi"],["flag","Bilan de fin de bande","À la clôture de chaque bande"],["landmark","Rapport mensuel national","Le 1er du mois"]].map(r=>item(r[0],r[1],r[2],`<div style="display:flex;gap:8px">${btn("PDF",{sm:true,sec:true,icon:"download",on:"toast(F.length?'Rapport PDF généré':'Aucune donnée à exporter')"})}${btn("Excel",{sm:true,sec:true,icon:"sheet",on:"exp()"})}</div>`)).join(""))}
+${card(cardTitle("download","Export personnalisé")+`<div class="flds" style="grid-template-columns:1fr">${field("Période","","","",{ph:"Du … au …"})}${field("Données","Fermes, bandes et indicateurs")}</div><div style="margin-top:16px">${btn("Générer l’export",{icon:"download",on:"exp()"})}</div><p class="sub" style="margin-top:12px">Les exports respectent les droits du profil et sont journalisés.</p>`)}</div>`,
+
+parametrage:()=>`<div class="grid g-h">${card(cardTitle("sliders-horizontal","Seuils, fréquences et durées")+`<div class="flds">${field("Durée d’une bande","45","Durée de référence, de la mise en place à la sortie.","jours")}${field("Alerte mortalité du jour","0,5","Part de l’effectif au-delà de laquelle une alerte est créée.","%")}${field("Écart intrants","10","Écart toléré entre livraisons et déclarations.","%")}${field("Écart à l’abattoir","5","","%")}${field("Fréquence des pesées","7","","jours")}</div>`)}
+${card(cardTitle("chart-line","Formules des indicateurs")+`<div class="flds" style="grid-template-columns:1fr">${field("Taux de mortalité","morts cumulés / mis en place × 100")}${field("Viabilité","100 − taux de mortalité")}${field("GMQ (g/jour)","(poids moyen − poids initial) / jours")}${field("Indice de consommation","aliment consommé / poids vif produit")}</div>`)}</div>
+${alertBanner("warn","triangle-alert","Valeurs proposées, à valider par la DGE et les services vétérinaires.",btn("Enregistrer",{icon:"check",on:"toast('Paramètres enregistrés et journalisés')"}))}`,
+
+utilisateurs:()=>`<div class="grid k3">${card(`<div class="prof"><img src="${IMG}farmer.jpg" alt=""><div><small>Éleveurs</small><div class="val">0</div>${pill("Aucun compte","info")}</div></div>`)}${card(`<div class="prof"><img src="${IMG}agent.jpg" alt=""><div><small>Agents techniques</small><div class="val">0</div>${pill("Aucun compte","info")}</div></div>`)}${card(`<div class="prof"><span class="big-b">${ic("landmark")}</span><div><small>Institutions</small><div class="val">0</div>${pill("DGE, MAEDR, BCEG…","info")}</div></div>`)}</div>
+<div class="grid">${card(cardTitle("shield-check","Droits par profil","",`Un changement est appliqué immédiatement et journalisé`)+table(["Profil","Périmètre",...D],R.map((r,i)=>[`<b>${r[0]}</b>`,`<small>${r[1]}</small>`,...M[i].map((m,j)=>`<input type="checkbox" class="sw" ${m?"checked":""} aria-label="${r[0]} : ${D[j]}" onchange="toast('Droit modifié et journalisé')">`)])))}
+${card(cardTitle("history","Journal des opérations","","Non modifiable")+(LOG.length?timeline(LOG):empty("history","Journal vide","Les créations, exports et changements de droits s’y inscriront.")))}</div>`,
+
+application:()=>`${apkPanel()}
+<div class="grid g-2" style="margin-top:16px">${card(cardTitle("smartphone","Aperçu de l’application")+`<div class="phone" style="margin:8px auto 0"><img src="${SHOT}10_accueil.png" alt="Accueil"></div><div style="text-align:center;margin-top:12px">${btn("Parcourir les écrans",{sec:true,sm:true,on:"openPhone(0)"})}</div>`)}
+${card(cardTitle("list-checks","Installation sur le terrain")+`<ol class="num">${["Téléchargez l’APK avec le bouton vert (code <b>"+APK.code+"</b>).","Transférez le fichier sur le téléphone de l’éleveur ou de l’agent.","Autorisez l’installation depuis des sources inconnues si Android le demande.","Ouvrez Poufa et créez le compte avec le numéro reçu par SMS."].map(s=>`<li>${s}</li>`).join("")}</ol>`)}</div>`,
+
+guide:()=>`<div class="guide"><nav class="toc card"><b>Sommaire</b>${GUIDE.map((g,i)=>`<a onclick="toChap('${g.id}')">${ic(g.icon)}<span>${i+1}. ${g.title}</span></a>`).join("")}<div class="toc-act">${btn("Imprimer le guide",{icon:"printer",sec:true,on:"print()"})}</div></nav>
+<div class="chaps">${card(`<div class="ct">${badge("compass")}<div class="grow"><h3>Par où commencer ?</h3><small>Trois gestes suffisent pour prendre en main l’administration.</small></div></div><ol class="num">${["Connectez-vous avec votre adresse et le code reçu par SMS.","Lisez le tableau de bord : le bandeau rouge et les pastilles vous disent ce qui demande une action.","Cliquez sur une tuile ou une ferme : chaque écran explique quoi faire, avec un seul bouton vert principal."].map(s=>`<li>${s}</li>`).join("")}</ol>`)}
+${GUIDE.map((g,i)=>guideChapter(g,i)).join("")}</div></div>`};
+
+/* ---------- Guide d'utilisation : contenu ---------- */
+const GUIDE=[
+{id:"connexion",icon:"log-in",title:"Se connecter",img:"admin_login",pos:"50% 60%",what:"L’administration est réservée aux comptes autorisés : DGE, services vétérinaires, BCEG, MAEDR et administrateurs.",
+steps:["Saisissez votre adresse e-mail et votre mot de passe, puis choisissez « Se connecter ».","Entrez le code à 4 chiffres reçu par SMS : la connexion se fait dès le 4e chiffre.","Mot de passe oublié : choisissez le lien sous le champ, un e-mail vous permet d’en créer un nouveau.","Pour quitter, ouvrez « Mon compte » (votre avatar en haut à droite) puis « Se déconnecter »."],
+tip:"Sur un ordinateur partagé, décochez « Rester connecté »."},
+{id:"dashboard",icon:"layout-dashboard",title:"Lire le tableau de bord",go:"dashboard",img:"weather_cloud",pos:"50% 50%",what:"Une vue d’ensemble du programme : météo, indicateurs clés, production, bande à la une et tâches.",
+steps:["Au démarrage, le tableau est vide : créez la première ferme depuis « Fermes et bandes ».","Dès qu’il y a des données, un bandeau rouge signale une alerte sanitaire à qualifier.","Les quatre indicateurs et la courbe se remplissent avec les bandes et les ventes.","Les tuiles « Piloter le programme » mènent aux sujets qui demandent une action.","Filtrez toute l’application par province avec la liste en haut de l’écran."],
+tip:"Le sélecteur de province s’applique à tous les écrans, y compris les exports."},
+{id:"fermes",icon:"warehouse",title:"Suivre les fermes et les bandes",go:"fermes",img:"coop_hero",pos:"50% 60%",what:"Le registre unique des fermes : statut, bande en cours, mortalité, croissance et régularité des saisies.",
+steps:["Cherchez une ferme par identifiant ou localité, ou filtrez par statut avec les pastilles.","Cliquez sur une ligne pour ouvrir la fiche : statut, progression et indicateurs dès qu’une bande est suivie.","Depuis la fiche, « Programmer une visite » envoie la visite à l’agent technique de la province.","« Nouvelle ferme » crée l’identifiant automatiquement et envoie son code de connexion à l’éleveur."],
+tip:"Une saisie en ambre signifie que moins de 80 % des jours de la bande ont été saisis."},
+{id:"carte",icon:"map",title:"Repérer les zones à risque",go:"carte",img:"agent",pos:"50% 35%",what:"La carte place chaque ferme du Gabon et la colore selon sa mortalité.",
+steps:["Vert : mortalité normale (3 % ou moins). Ambre : à surveiller (3 à 4 %). Rouge : élevée (plus de 4 %).","Cliquez sur un point pour ouvrir la fiche de la ferme.","La liste « Fermes à surveiller » classe les fermes de la plus touchée à la moins touchée."]},
+{id:"intrants",icon:"package",title:"Contrôler les intrants",go:"intrants",img:"tile_inputs",pos:"50% 55%",what:"Le recoupement entre ce qui a été livré (poussins, aliment, vaccins) et ce que l’éleveur déclare utiliser.",
+steps:["Lisez la colonne « Écart » : au-delà de 10 %, la ligne passe « À vérifier ».","Cliquez sur la ferme pour voir sa fiche et programmer une visite si besoin."],
+tip:"Le seuil de 10 % se règle dans « Paramétrage »."},
+{id:"sanitaire",icon:"heart-pulse",title:"Qualifier une alerte sanitaire",go:"sanitaire",img:"health",pos:"50% 35%",what:"Les alertes naissent des saisies des éleveurs (mortalité au-dessus du seuil, signes déclarés). Seuls les services vétérinaires les qualifient.",
+steps:["« Prendre en analyse » : l’alerte passe de « Nouvelle » à « En analyse ».","Après vérification, choisissez « Confirmer » ou « Infirmer ».","« Clôturer » termine le suivi. Chaque étape est enregistrée dans le journal."],
+extra:`<div class="steps" style="margin:4px 0 14px">${["Nouvelle","En analyse","Confirmée ou infirmée","Close"].map((l,j)=>`<div class="st ${j<2?"done":j==2?"cur":""}"><i></i>${l}</div>`).join("")}</div>`,
+tip:"Une alerte n’est jamais publiée sans qualification vétérinaire."},
+{id:"economique",icon:"hand-coins",title:"Lire le suivi économique",go:"economique",img:"colors",pos:"50% 75%",what:"Chiffre d’affaires, charges et marge, par province et par ferme.",
+steps:["Les barres vertes montrent le chiffre d’affaires, les bleues les charges.","Le tableau donne le coût de production par kilo vif et la marge de chaque ferme."]},
+{id:"tracabilite",icon:"qr-code",title:"Suivre un lot",go:"tracabilite",img:"tile_lot",pos:"50% 60%",what:"Chaque lot vendu a un identifiant et un QR code, de la livraison des poussins à la cession.",
+steps:["Choisissez un lot à gauche : son QR code et son historique s’affichent à droite.","« Imprimer l’étiquette » produit l’étiquette à coller sur les caisses."],
+tip:"Le QR code ne contient aucune donnée personnelle et n’est pas un certificat sanitaire."},
+{id:"rapports",icon:"file-text",title:"Produire un rapport ou un export",go:"rapports",img:"tile_entry",pos:"50% 40%",what:"Les rapports hebdomadaires, de fin de bande et mensuels sont prêts automatiquement.",
+steps:["Téléchargez un rapport en PDF ou en Excel.","Pour un besoin précis, choisissez la période et les données dans « Export personnalisé »."],
+tip:"Chaque export respecte vos droits et apparaît dans le journal."},
+{id:"parametrage",icon:"settings",title:"Régler les seuils",go:"parametrage",img:"offline",pos:"50% 62%",what:"Aucune règle n’est codée en dur : durée d’une bande, seuils d’alerte, écarts tolérés et formules des indicateurs se règlent ici.",
+steps:["Modifiez la valeur, l’unité est rappelée à droite du champ.","Choisissez « Enregistrer » : le changement s’applique à tous et il est journalisé."],
+tip:"Les valeurs proposées doivent être validées par la DGE et les services vétérinaires."},
+{id:"utilisateurs",icon:"users",title:"Gérer les comptes et les droits",go:"utilisateurs",img:"farmer",pos:"50% 35%",what:"Chaque profil ne voit que ce qui le concerne : l’éleveur sa ferme, l’agent ses fermes, le MAEDR des données agrégées.",
+steps:["Activez ou désactivez un droit avec l’interrupteur de la matrice.","Consultez le journal : il trace toutes les opérations et ne peut pas être modifié."]},
+{id:"mobile",icon:"smartphone",title:"Comprendre l’application mobile",img:"welcome",pos:"50% 54%",what:"Les éleveurs saisissent chaque jour sur leur téléphone ; les agents techniques suivent leurs fermes. Ce que vous voyez dans l’administration vient de ces saisies.",
+steps:["Inscription : l’éleveur choisit son profil, reçoit un code par SMS et choisit sa ferme.","Saisie du jour, dans l’ordre de la fiche papier : date, morts, aliment. Puis pesée et sortie.","Sans réseau, la saisie reste sur le téléphone et part dès le retour du réseau (pastille « À envoyer »).","L’éleveur déclare un problème sanitaire ; il arrive ici dans « Suivi sanitaire ».","L’agent technique voit ses fermes, la météo et les déclarations à vérifier (chapitre suivant)."],
+extra:()=>shots([["01_bienvenue","Présentation"],["13_saisie","Saisie du jour"],["17_accueil_hors_ligne","Hors ligne"],["18_agent","Espace agent"]])},
+{id:"agent",icon:"user-cog",title:"Le travail de l’agent technique",img:"agent",pos:"50% 58%",what:"L’agent technique ne voit que les fermes de sa province. Ses visites et ses vérifications remontent ici, dans les fiches des fermes et le suivi des intrants.",
+steps:["Il visite les fermes et enregistre la visite : date, points contrôlés, observations, recommandations et position GPS.","Il vérifie les déclarations des éleveurs : il compte le stock sur place, et l’application le recoupe avec ce que l’État a livré et ce que l’éleveur dit avoir utilisé.","Il relève la position GPS de la ferme sur place quand elle entre dans le programme ; elle apparaît alors sur la carte.","Il repère les fermes à accompagner : mortalité au-dessus de 4 % ou moins de 70 % de jours saisis.","Comme l’éleveur, il travaille sans réseau : ses visites partent dès le retour du réseau (pastille « À envoyer »)."],
+tip:"Un écart de plus de 2 % entre le stock attendu et le stock constaté est signalé à la coordination.",
+extra:()=>shots([["19_agent_suivi","Fermes à accompagner"],["25_visite","Visite de ferme"],["26_verification","Vérification"],["24_gps_releve","Position GPS"]])},
+{id:"couleurs",icon:"palette",title:"Les couleurs et les mots",img:"colors",pos:"50% 40%",what:"Partout, dans l’administration comme sur mobile, une couleur a toujours le même sens et elle est accompagnée d’un mot.",
+extra:`<div style="margin:4px 0 16px">${colorChips()}</div><div class="gloss">${[["Bande","Groupe de poussins mis en place ensemble et élevés jusqu’à la sortie (45 jours)."],["Mise en place","Arrivée des poussins dans la ferme : jour 1 de la bande."],["Mortalité","Morts cumulés divisés par les poussins mis en place, en %."],["Viabilité","100 moins le taux de mortalité."],["GMQ","Gain moyen quotidien : grammes gagnés par animal et par jour."],["IC","Indice de consommation : aliment consommé divisé par le poids vif produit. Plus il est bas, mieux c’est."],["Cohorte","Vague d’entrée des fermes dans le programme."],["Lot","Animaux cédés ensemble, identifiés par un QR code."]].map(g=>`<div><b>${g[0]}</b><small>${g[1]}</small></div>`).join("")}</div>`},
+{id:"faq",icon:"circle-help",title:"Questions fréquentes",what:"Les réponses aux questions les plus posées. Pour le reste, le support répond sous 24 h à support@poufa.ga.",
+extra:()=>FAQ.map(q=>`<details><summary>${q[0]}${ic("chevron-down")}</summary><p>${q[1]}</p></details>`).join("")}];
+const guideChapter=(g,i)=>card(`${g.img?`<img class="g-img" src="${IMG+g.img}.jpg" alt="" style="object-position:${g.pos}">`:""}<div class="ct">${badge(g.icon)}<div class="grow"><small>Chapitre ${i+1}</small><h3>${g.title}</h3></div>${g.go?btn("Ouvrir l’écran",{sm:true,sec:true,icon:"arrow-right",on:`go('${g.go}')`}):""}</div>
+<p class="g-what">${g.what}</p>${g.steps?`<b class="g-l">Comment faire</b><ol class="num">${g.steps.map(s=>`<li>${s}</li>`).join("")}</ol>`:""}${typeof g.extra=="function"?g.extra():g.extra||""}${g.tip?alertBanner("info","lightbulb",`<b>Bon à savoir :</b> ${g.tip}`):""}`,"chap","g-"+g.id);
+const shots=l=>`<div class="shots">${l.map(s=>`<figure onclick="openPhone(0)"><img src="${SHOT+s[0]}.png" alt="${s[1]}"><figcaption>${s[1]}</figcaption></figure>`).join("")}</div>`;
+function toChap(id){$("#g-"+id).scrollIntoView({behavior:"smooth",block:"start"})}
+
+/* ---------- Actions ---------- */
+function tb(){const q=((($("#q")||{}).value||"")+" "+$("#q0").value).trim().toLowerCase().split(" ").filter(Boolean),f=fl().filter(x=>(!fs||x.st==fs)&&q.every(w=>(x.id+" "+x.loc).toLowerCase().includes(w)));if(!$("#tbd"))return;
+$("#tbd").innerHTML=f.length?table(["Ferme","Province","Statut","Bande en cours","Mortalité","GMQ","IC","Saisie"],f.map(x=>{const l=mLevel(x.mort);return[farmCell(x),x.prov,pill(x.st),`<div class="mini">${progress(x.day/45*100)}<small>J${x.day} / 45</small></div>`,`<div class="mini"><b>${pct(x.mort)}</b>${l[1]=="pos"?"":pill(l[0])}</div>`,x.gmq?x.gmq+" g/j":"—",x.ic?dec(x.ic,2):"—",x.sai<80?pill(pct(x.sai,0),"warn"):pct(x.sai,0)]}),i=>`openFarm('${f[i].id}')`):empty("warehouse",F.length?"Aucune ferme ne correspond à la recherche":"Aucune ferme enregistrée",F.length?"Modifiez le filtre ou la recherche.":"Choisissez « Nouvelle ferme » pour créer la première.");icons()}
+function gq(){if(location.hash!="#fermes")location.hash="fermes";else tb()}
+function go(h){location.hash=h}
+function setA(i,s){if(s=="Confirmée"||s=="Infirmée")A[i][4]=s;A[i][2]=s;toast(`Alerte ${A[i][1]} : ${s=="Close"?"clôturée":s.toLowerCase()} (journalisé)`);render()}
+function openFarm(id){const x=F.find(f=>f.id==id);if(!x)return;const l=mLevel(x.mort),eff=x.day?x.cap*(1-x.mort/100):0,events=[];
+if(x.day){events.push({icon:"clipboard-pen",title:"Bande en cours",meta:`Jour ${x.day} sur 45 · saisie ${pct(x.sai,0)}`});
+if(x.gmq)events.push({icon:"scale",title:"Gain moyen journalier",meta:`${x.gmq} g/j`});
+if(x.ic)events.push({icon:"wheat",title:"Indice de consommation",meta:dec(x.ic,2)});
+}else events.push({icon:"bird",title:"En préparation",meta:"Aucune saisie mobile reçue pour l’instant"});
+drawer(`<div class="hero"><img src="${IMG}coop_hero.jpg" alt="">${closeBtn()}</div>
+<div class="sheet"><div class="row-b"><h2>Ferme ${x.id}</h2>${pill(x.st)}</div><p class="lead">${x.loc}, ${x.prov}. Cohorte ${x.coh}, capacité ${nf(x.cap)} poussins.</p>
+<div class="row-b"><b>Progression de la bande</b><small>Jour ${x.day} sur 45</small></div>${progress(x.day/45*100)}<small>${x.day?`Sortie prévue dans ${45-x.day} jours.`:"Mise en place non démarrée."}</small>
+${statBlock("Indicateurs de la bande",[[{v:x.day?nf(eff):"—",l:"Effectif présent"},{v:x.day?pct(x.mort):"—",l:x.day?"Mortalité · "+l[0]:"Mortalité",tone:x.day&&l[1]!="pos"?l[1]:""},{v:x.day?pct(100-x.mort):"—",l:"Viabilité"}],[{v:x.ic?dec(x.ic,2):"—",l:"Indice de conso."},{v:x.gmq?x.gmq+" g":"—",l:"Gain moyen / jour"},{v:x.day?pct(x.sai,0):"—",l:"Saisies à jour",tone:x.day&&x.sai<80?"warn":""}]])}
+${secTitle("Journal de la ferme")}${timeline(events)}</div>
+<div class="dfoot">${btn("Programmer une visite",{icon:"calendar",on:`planVisit('${x.id}')`})}${btn("Carte",{sec:true,icon:"map",on:"closeDrawer();go('carte')"})}</div>`)}
+const SH=[["Accueil","10_accueil"],["Bande","12_detail_bande"],["Sanitaire","14_sanitaire"],["Sombre","30_accueil_sombre"]];
+function openPhone(k){drawer(`${sheetHead("Application mobile","APK pour éleveurs et agents · code ${APK.code}")}
+<div class="dbody" style="padding-top:0">${apkBanner()}
+<div class="seg" style="margin:0 0 12px">${SH.map((s,i)=>`<button class="${i==k?"on":""}" onclick="openPhone(${i})">${s[0]}</button>`).join("")}</div>
+<div class="phone"><img src="${SHOT+SH[k][1]}.png" alt="${SH[k][0]}"></div></div>`)}
+
+/* ---------- Formulaires en volet ---------- */
+function formDrawer({img,pos="50% 50%",title,sub,body,submit,icon="check",on}){drawer(`<div class="hero" style="height:190px"><img src="${IMG+img}.jpg" alt="" style="object-position:${pos}">${closeBtn()}</div>
+<form class="sheet" onsubmit="return ${on}(event)" novalidate><h2>${title}</h2><p class="lead">${sub}</p><div class="flds" style="grid-template-columns:1fr">${body}</div><button hidden></button></form>
+<div class="dfoot">${btn("Annuler",{sec:true,on:"closeDrawer()"})}${btn(submit,{icon,on:"$('#dr form').requestSubmit()"})}</div>`);setTimeout(()=>{const f=$("#dr form input:not([readonly])");f&&f.focus()},250)}
+const AGENTS=["Agent Estuaire","Agent Haut-Ogooué","Agent Ogooué-Maritime","Agent Woleu-Ntem","Agent Moyen-Ogooué","Agent Ngounié"];
+const nextId=prov=>{const p=PROV.find(x=>x[0]==prov);return p[1]+"-"+String(F.filter(f=>f.prov==prov).length+1).padStart(3,"0")};
+function newFarm(){const p=$("#prov").value||"Estuaire";formDrawer({img:"coop_hero",pos:"50% 60%",title:"Nouvelle ferme",sub:"L’identifiant est créé automatiquement à partir de la province.",submit:"Créer la ferme",on:"saveFarm",body:
+field("Province",p,"","",{id:"nf-p",options:PROV.map(x=>x[0]),change:"$('#nf-id').value=nextId(this.value)"})+field("Identifiant",nextId(p),"Créé automatiquement, il ne change plus.","",{id:"nf-id",attrs:"readonly"})+
+field("Localité","","Ville ou village le plus proche.","",{id:"nf-l",ph:"Par exemple : Ntoum"})+field("Capacité","2000","Nombre de poussins par bande.","poussins",{id:"nf-c",type:"number",attrs:'min="100" step="100"'})+
+field("Éleveur responsable","","","",{id:"nf-e",ph:"Prénom et nom"})+field("Téléphone de l’éleveur","","Il recevra par SMS son code de connexion à l’application.","",{id:"nf-t",type:"tel",ph:"07 12 34 56"})})}
+function saveFarm(e){e.preventDefault();const ok=[setErr("nf-l",val("nf-l")?"":"Saisissez la localité de la ferme."),setErr("nf-c",+val("nf-c")>=100?"":"Saisissez une capacité d’au moins 100 poussins."),setErr("nf-e",val("nf-e")?"":"Saisissez le nom de l’éleveur."),setErr("nf-t",val("nf-t").replace(/\D/g,"").length==8?"":"Saisissez un numéro à 8 chiffres, par exemple 07 12 34 56.")].every(Boolean);
+if(!ok)return firstErr();const prov=val("nf-p"),loc=PROV.find(x=>x[0]==prov)[2][0],id=val("nf-id");
+F.push({i:n++,id,loc:val("nf-l"),prov,x:loc[1]+.15,y:loc[2]-.15,st:"En préparation",coh:2,cap:+val("nf-c"),mort:0,gmq:0,ic:0,sai:100,vol:0,liv:0,u:0,s:0,gap:0,day:0});
+LOG.unshift({icon:"user-plus",title:`Création de la ferme ${id}`,meta:`${S?.name||"Administrateur"} · maintenant`});
+closeDrawer();fs="";location.hash="fermes";render();toast(`Ferme ${id} créée · SMS envoyé à ${val("nf-e")||"l’éleveur"}`);return false}
+function newTask(){formDrawer({img:"tile_entry",pos:"50% 40%",title:"Nouvelle tâche",sub:"Elle apparaît dans « Tâches et visites » et dans les notifications.",submit:"Ajouter la tâche",on:"saveTask",body:
+field("Tâche","","","",{id:"nt-t",ph:"Par exemple : Relancer les saisies en retard"})+field("Assignée à","Administrateur","","",{id:"nt-a",options:["Administrateur","POUFA / DGE","Services vétérinaires","MAEDR",...AGENTS]})+field("Échéance","","","",{id:"nt-d",type:"date"})})}
+function saveTask(e){e.preventDefault();const ok=[setErr("nt-t",val("nt-t")?"":"Décrivez la tâche en quelques mots."),setErr("nt-d",val("nt-d")?"":"Choisissez une échéance.")].every(Boolean);if(!ok)return firstErr();TK.unshift([val("nt-t"),val("nt-a"),frDate(val("nt-d")),"À faire","list-checks"]);LOG.unshift({icon:"list-checks",title:"Tâche ajoutée",meta:`${S?.name||"Administrateur"} · ${val("nt-t")}`});closeDrawer();render();toast("Tâche ajoutée");return false}
+function planVisit(id){const x=F.find(f=>f.id==id),ag=AGENTS[PROV.findIndex(p=>p[0]==x.prov)];formDrawer({img:"agent",pos:"50% 35%",title:"Programmer une visite",sub:`Ferme ${id} · ${x.loc}. L’agent la retrouve dans son application.`,submit:"Programmer",icon:"calendar",on:"saveVisit",body:
+field("Ferme",id,"","",{id:"pv-f",attrs:"readonly"})+field("Objet de la visite","Visite de suivi","","",{id:"pv-o",options:["Visite de suivi","Contrôle sanitaire","Pesée de contrôle","Formation de l’éleveur"]})+field("Agent technique",ag,"","",{id:"pv-a",options:AGENTS})+field("Date","","","",{id:"pv-d",type:"date"})})}
+function saveVisit(e){e.preventDefault();if(!setErr("pv-d",val("pv-d")?"":"Choisissez la date de la visite."))return firstErr();TK.unshift([`${val("pv-o")} ${val("pv-f")}`,val("pv-a"),frDate(val("pv-d")),"À faire","map-pin"]);LOG.unshift({icon:"map-pin",title:`Visite programmée · ${val("pv-f")}`,meta:`${val("pv-a")} · ${frDate(val("pv-d"))}`});closeDrawer();render();toast(`Visite programmée le ${frDate(val("pv-d"))}`);return false}
+
+/* ---------- Compte, aide et notifications ---------- */
+function openProfile(){const dark=document.documentElement.dataset.theme=="dark";drawer(`${sheetHead("Mon compte","Profil, préférences et session")}<div class="dbody">
+<div class="card" style="display:flex;align-items:center;gap:14px;margin-bottom:8px"><span class="av" style="width:52px;height:52px;font-size:16px">${S.initials}</span><div class="grow"><b>${S.name}</b><small style="display:block">${S.email}</small></div>${pill("Administrateur","info")}</div>
+${item("sun-moon","Mode sombre",dark?"Activé":"Désactivé",`<input type="checkbox" class="sw" ${dark?"checked":""} onchange="theme();openProfile()" aria-label="Mode sombre">`)}
+${item("presentation","Revoir la présentation","Les principes de l’administration en 4 écrans","","closeDrawer();openTour(0)")}
+${item("book-open","Guide d’utilisation","Chaque écran expliqué pas à pas","","closeDrawer();go('guide')")}
+${item("circle-help","Aide et support","Questions fréquentes et contacts","","openHelp()")}
+${item("history","Journal des opérations","Toutes les actions sont tracées","","closeDrawer();go('utilisateurs')")}
+${item("log-out","Se déconnecter","Fin de la session sur cet ordinateur","","logout()")}</div>`)}
+const FAQ=[["Comment ajouter une ferme ?","Dans « Fermes et bandes », choisissez « Nouvelle ferme ». L’identifiant est créé automatiquement et l’éleveur reçoit son code par SMS."],["Qui qualifie une alerte sanitaire ?","Seuls les services vétérinaires. L’alerte passe de « Nouvelle » à « En analyse », puis elle est confirmée ou infirmée avant d’être close."],["Pourquoi une ferme est-elle « en retard » ?","Moins de 80 % des jours de la bande ont une saisie. Programmez une visite de l’agent technique depuis la fiche de la ferme."],["Les exports sont-ils tracés ?","Oui. Chaque export respecte les droits du profil et apparaît dans le journal des opérations."]];
+function openHelp(){drawer(`<div class="hero" style="height:200px"><img src="${IMG}colors.jpg" alt="" style="object-position:50% 45%">${closeBtn()}</div><div class="sheet"><h2>Aide et support</h2><p class="lead">Les réponses aux questions fréquentes et les personnes à contacter.</p>
+<b>Les couleurs ont un sens</b><div style="margin:10px 0 18px">${colorChips()}</div>
+${FAQ.map(q=>`<details><summary>${q[0]}${ic("chevron-down")}</summary><p>${q[1]}</p></details>`).join("")}
+<div style="margin-top:12px">${item("mail","Support Poufa","support@poufa.ga · réponse sous 24 h")}${item("phone","Assistance téléphonique","+241 11 00 00 00 · du lundi au vendredi, 8 h à 17 h")}</div></div>
+<div class="dfoot">${btn("Lire le guide",{icon:"book-open",on:"closeDrawer();go('guide')"})}${btn("Écrire au support",{sec:true,icon:"mail",on:"toast('Ouvrez un e-mail vers support@poufa.ga')"})}</div>`)}
+function openNotif(){const na=A.filter(a=>a[2]=="Nouvelle"),lots=LOT.map((l,i)=>[l,i]).filter(([l])=>l[4]!="Validé");drawer(`${sheetHead("Notifications",`${plural(na.length,"alerte")} à qualifier · ${plural(TK.length,"tâche")} en cours`)}<div class="dbody">
+${secTitle("Alertes sanitaires")}${na.length?na.map(a=>item("triangle-alert",a[0],`Ferme ${a[1]} · ${a[3]}`,pill("Nouvelle"),"closeDrawer();go('sanitaire')","dan")).join(""):alertBanner("pos","circle-check","Aucune alerte à qualifier.")}
+${secTitle("Tâches et visites")}${TK.length?TK.slice(0,4).map(t=>item(t[4],t[0],`${t[1]} · ${t[2]}`,pill(t[3]))).join(""):empty("list-checks","Aucune tâche","Ajoutez-en depuis le tableau de bord.")}
+${secTitle("Traçabilité")}${lots.length?lots.map(([l,i])=>item("qr-code",l[0],`${l[1]} · ${l[3]}`,pill(l[4]),`closeDrawer();curLot=${i};go('tracabilite');render()`)).join(""):empty("qr-code","Aucun lot en attente","Les lots non validés apparaîtront ici.")}</div>`)}
+
+/* ---------- Présentation (premier accès) ---------- */
+const TOUR=[["admin_login","Bienvenue dans l’administration","Suivez les fermes du programme, les bandes et la production d’un coup d’œil.","50% 62%"],["health","Des alertes qualifiées","Chaque alerte est qualifiée par les services vétérinaires avant toute publication.","50% 35%"],["colors","Les couleurs ont un sens","La couleur est toujours accompagnée d’un mot, comme dans l’application mobile.","50% 42%"],["tile_lot","De la ferme au consommateur","Chaque lot a son QR code et son historique, sans donnée personnelle. Le guide d’utilisation reste disponible dans le menu « Aide ».","50% 55%"]];
+function openTour(k){const t=TOUR[k],last=k==TOUR.length-1;$("#modal").innerHTML=`<div class="tour" role="dialog" aria-label="Présentation"><img src="${IMG+t[0]}.jpg" alt="" style="object-position:${t[3]}"><div class="sheet"><h2>${t[1]}</h2><p>${t[2]}</p>${k==2?colorChips():""}
+<div class="tour-f"><div class="dots">${TOUR.map((_,i)=>`<i class="${i==k?"on":""}"></i>`).join("")}</div><div>${last?"":btn("Passer",{sec:true,on:"endTour()"})}${btn(last?"Commencer":"Suivant",{icon:last?"check":"arrow-right",on:last?"endTour()":`openTour(${k+1})`})}</div></div></div></div>`;$("#modal").classList.add("on");icons()}
+function endTour(){localStorage.setItem("poufa-admin-tour","1");$("#modal").classList.remove("on")}
+
+/* ---------- Connexion ---------- */
+let S=JSON.parse(localStorage.getItem("poufa-admin")||"null"),authStep="login",authEmail="dge@poufa.ga",resendT;
+const EMAIL=/^\S+@\S+\.\S+$/;
+const AUTH={
+login:()=>`<span class="pill info">${ic("lock")}Espace sécurisé</span><h1>Connexion à l’administration</h1><p class="sub">Pilotage du programme POUFA. Accès réservé aux comptes autorisés.</p>
+<form onsubmit="return login(event)" novalidate>${field("Adresse e-mail",authEmail,"","",{id:"em",type:"email",attrs:'autocomplete="username"'})}
+${field("Mot de passe","","","",{id:"pw",type:"password",attrs:'autocomplete="current-password"',trail:`<button type="button" class="eye" onclick="peek(this)" aria-label="Afficher le mot de passe">${ic("eye")}</button>`})}
+<div class="row-b"><label class="check"><input type="checkbox" class="sw" checked>Rester connecté</label><button type="button" class="link" onclick="authGo('forgot')">Mot de passe oublié ?</button></div>
+<button class="btn full">${ic("log-in")}Se connecter</button></form>${alertBanner("info","info","Démonstration : l’adresse est remplie, saisissez un mot de passe de 4 caractères ou plus.")}`,
+code:()=>`<button class="link" onclick="authGo('login')">${ic("arrow-left")}Retour</button><h1>Vérification en deux étapes</h1><p class="sub">Saisissez le code à 4 chiffres envoyé par SMS au <b style="white-space:nowrap">+241 07 •• •• 12</b>.</p>
+<form onsubmit="return verify(event)" novalidate><div class="code" id="code" onpaste="codePaste(event)">${[0,1,2,3].map(i=>`<input inputmode="numeric" maxlength="1" autocomplete="one-time-code" aria-label="Chiffre ${i+1}" oninput="codeIn(this,${i})" onkeydown="codeKey(event,${i})">`).join("")}</div>
+<small id="codeErr">Saisissez les 4 chiffres du code.</small><button class="btn full">${ic("shield-check")}Vérifier</button></form><p class="sub" style="text-align:center" id="resend"></p>
+<div style="margin-top:16px">${alertBanner("info","info","Démonstration : n’importe quel code à 4 chiffres est accepté.")}</div>`,
+forgot:()=>`<button class="link" onclick="authGo('login')">${ic("arrow-left")}Retour</button><h1>Mot de passe oublié</h1><p class="sub">Saisissez votre adresse : vous recevrez un lien pour choisir un nouveau mot de passe.</p>
+<form onsubmit="return forgot(event)" novalidate>${field("Adresse e-mail",authEmail,"","",{id:"em",type:"email"})}<button class="btn full">${ic("send")}Envoyer le lien</button></form>`,
+sent:()=>`<span class="badge" style="width:64px;height:64px">${ic("mail-check")}</span><h1>Vérifiez vos e-mails</h1><p class="sub">Un lien a été envoyé à <b>${authEmail}</b>. Il reste valable 30 minutes.</p><div style="margin-top:24px">${btn("Retour à la connexion",{icon:"arrow-left",sec:true,on:"authGo('login')"})}</div>`};
+const POINTS=[["chart-line","Indicateurs en temps réel","Fermes, bandes et production, province par province."],["stethoscope","Alertes qualifiées","Les services vétérinaires valident avant toute publication."],["qr-code","Traçabilité des lots","De la ferme au consommateur grâce au QR code."]];
+function authView(){const dark=document.documentElement.dataset.theme=="dark";$("#auth").innerHTML=`<div class="auth-art light"><img src="${IMG}admin_login.jpg" alt=""><div class="float">${ic("leaf")}Poufa</div><div class="auth-pts">${POINTS.map(p=>item(p[0],p[1],p[2])).join("")}</div></div>
+<div class="auth-side"><div class="auth-top"><span class="pill pos">${ic("wifi")}En ligne</span><button class="ibtn" onclick="theme()" aria-label="Changer de thème">${ic(dark?"sun":"moon")}</button></div><div class="auth-box">${AUTH[authStep]()}</div><p class="auth-foot">Programme POUFA · DGE · avec le Centre Gabonais de l’Innovation</p></div>`;icons()}
+function authGo(s){authStep=s;authView();const f=$("#auth form input");f&&f.focus();if(s=="code")resend()}
+function peek(b){const p=$("#pw"),show=p.type=="password";p.type=show?"text":"password";b.setAttribute("aria-label",show?"Masquer le mot de passe":"Afficher le mot de passe");b.innerHTML=ic(show?"eye-off":"eye");icons()}
+function login(e){e.preventDefault();const em=val("em"),okE=setErr("em",EMAIL.test(em)?"":"Saisissez une adresse e-mail valide, par exemple dge@poufa.ga."),okP=setErr("pw",$("#pw").value.length>=4?"":"Saisissez votre mot de passe (4 caractères minimum).");
+if(okE&&okP){authEmail=em;authGo("code")}return false}
+const codeVal=()=>[...document.querySelectorAll("#code input")].map(x=>x.value).join("");
+function codeIn(el,i){el.value=el.value.replace(/\D/g,"").slice(-1);$("#code").classList.remove("err");$("#codeErr").style.display="";if(el.value&&i<3)el.nextElementSibling.focus();if(codeVal().length==4)verify()}
+function codeKey(e,i){if(e.key=="Backspace"&&!e.target.value&&i>0)e.target.previousElementSibling.focus()}
+function codePaste(e){const d=(e.clipboardData.getData("text").match(/\d/g)||[]).slice(0,4);if(!d.length)return;e.preventDefault();document.querySelectorAll("#code input").forEach((x,i)=>x.value=d[i]||"");if(d.length==4)verify()}
+function verify(e){e&&e.preventDefault();if(codeVal().length<4){$("#code").classList.add("err");$("#codeErr").style.display="block";return false}
+S={email:authEmail,name:"Administrateur DGE",initials:"AD"};localStorage.setItem("poufa-admin",JSON.stringify(S));clearInterval(resendT);
+loading("Ouverture de votre espace…",900).then(()=>{enter();toast("Connexion réussie")});return false}
+const loading=(m,ms)=>window.PoufaSplash?PoufaSplash.show(m,ms):Promise.resolve();
+function resend(){let s=30;const r=()=>{const el=$("#resend");if(!el)return clearInterval(resendT);el.innerHTML=s>0?`Renvoyer le code dans ${s} s`:`<button class="link" onclick="resend();toast('Nouveau code envoyé')">Renvoyer le code</button>`;s--;if(s<0)clearInterval(resendT)};clearInterval(resendT);r();resendT=setInterval(r,1000)}
+function forgot(e){e.preventDefault();const em=val("em");if(setErr("em",EMAIL.test(em)?"":"Saisissez une adresse e-mail valide.")){authEmail=em;authGo("sent")}return false}
+function enter(){document.body.classList.remove("out");$("#user").innerHTML=`<span class="av">${S.initials}</span><span class="who"><b>${S.name}</b><small>${S.email}</small></span>`;render();if(!localStorage.getItem("poufa-admin-tour"))openTour(0)}
+function logout(){localStorage.removeItem("poufa-admin");S=null;closeDrawer();$("#modal").classList.remove("on");document.body.classList.add("out");authGo("login")}
+function drawer(html){$("#dr").innerHTML=html;$("#scrim").classList.add("on");icons()}
+function closeDrawer(){$("#scrim").classList.remove("on")}
+let tt;function toast(m){const t=$("#ts");t.innerHTML=ic("circle-check")+m;icons();t.classList.add("on");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("on"),2400)}
+const exp=()=>toast(fl().length?fl().length+" ligne"+(fl().length>1?"s":"")+" prête"+(fl().length>1?"s":"")+" à l’export":"Aucune donnée à exporter");
+function theme(t){const d=t||(document.documentElement.dataset.theme=="dark"?"light":"dark");document.documentElement.dataset.theme=d;localStorage.setItem("poufa-theme",d);$("#thm").innerHTML=ic(d=="dark"?"sun":"moon");if(document.body.classList.contains("out")){const v=$("#em")?.value;authView();if(v!=null&&$("#em"))$("#em").value=v}icons()}
+const icons=()=>window.lucide&&lucide.createIcons({attrs:{"stroke-width":1.8}});
+
+function render(){const h=location.hash.slice(1),v=V[h]?h:"dashboard",[t,s,img,pos]=TT[v];document.title=`POUFA – ${t}`;
+$("#nav").innerHTML=NAV.map(([g,items])=>`<div class="grp">${g}</div>`+items.map(n=>`<a href="#${n[0]}" class="${n[0]==v?"on":""}">${ic(n[2])}${n[1]}</a>`).join("")).join("");
+$("#bell").textContent=A.filter(a=>a[2]=="Nouvelle").length||"";$("#bell").style.display=$("#bell").textContent?"":"none";
+$("#v").innerHTML=(v=="dashboard"?`<div class="head"><h1>Bonjour, Administrateur</h1><p class="sub">${s} · ${F.length?plural(F.length,"ferme")+" enregistrée"+(F.length>1?"s":""):"aucune ferme enregistrée"}</p></div>`:banner(img,t,s,pos))+V[v]();
+if(v=="fermes")tb();icons()}
+$("#prov").innerHTML+=PROV.map(p=>`<option>${p[0]}</option>`).join("");$("#prov").onchange=render;
+addEventListener("hashchange",()=>{closeDrawer();scrollTo(0,0);render()});addEventListener("keydown",e=>e.key=="Escape"&&closeDrawer());
+if(!S)document.body.classList.add("out");
+theme(localStorage.getItem("poufa-theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"));S?enter():authGo("login");
+addEventListener("load",()=>window.PoufaSplash&&setTimeout(PoufaSplash.hide,300));
+</script></body></html>
+

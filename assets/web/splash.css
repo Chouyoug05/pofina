@@ -1,0 +1,17 @@
+/* Chargement Poufa : la feuille qui scintille. Partagé par l'application web, l'administration et la maquette. */
+.pf-splash{--pf-bg:#F5F6F7;--pf-ink:#1C2420;--pf-mut:#7B8781;position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:var(--pf-bg);font-family:Inter,system-ui,sans-serif;transition:opacity .35s ease,visibility .35s}
+@media(prefers-color-scheme:dark){.pf-splash{--pf-bg:#0F1512;--pf-ink:#E8EFEA;--pf-mut:#93A39A}}
+:root[data-theme="dark"] .pf-splash{--pf-bg:#0F1512;--pf-ink:#E8EFEA;--pf-mut:#93A39A}
+:root[data-theme="light"] .pf-splash{--pf-bg:#F5F6F7;--pf-ink:#1C2420;--pf-mut:#7B8781}
+.pf-splash.done{opacity:0;visibility:hidden;pointer-events:none}
+.pf-leaf{position:relative;width:72px;height:72px;border-radius:20px;background:#1F9D40;display:grid;place-items:center;overflow:hidden;animation:pf-pulse 1.6s ease-in-out infinite}
+.pf-leaf>svg:first-child{width:46px;height:46px}
+.pf-leaf::after{content:"";position:absolute;inset:-40%;background:linear-gradient(115deg,transparent 42%,rgba(255,255,255,.55) 50%,transparent 58%);animation:pf-shine 1.6s ease-in-out infinite}
+.pf-star{position:absolute;top:11px;right:11px;width:11px;height:11px;animation:pf-twinkle 1.6s ease-in-out infinite}
+.pf-leaf.sm{width:28px;height:28px;border-radius:8px}.pf-leaf.sm>svg:first-child{width:18px;height:18px}.pf-leaf.sm .pf-star{top:4px;right:4px;width:5px;height:5px}
+.pf-word{font-size:22px;font-weight:700;color:var(--pf-ink)}
+.pf-msg{font-size:13px;color:var(--pf-mut)}
+@keyframes pf-pulse{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(31,157,64,.35)}50%{transform:scale(1.06);box-shadow:0 0 0 14px rgba(31,157,64,0)}}
+@keyframes pf-shine{0%{transform:translateX(-60%)}60%,100%{transform:translateX(60%)}}
+@keyframes pf-twinkle{0%,100%{opacity:0;transform:scale(.3) rotate(0)}50%{opacity:1;transform:scale(1) rotate(45deg)}}
+@media(prefers-reduced-motion:reduce){.pf-leaf,.pf-leaf::after,.pf-star{animation:none}}
